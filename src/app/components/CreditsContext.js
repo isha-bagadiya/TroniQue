@@ -31,7 +31,7 @@ export const CreditsProvider = ({ children }) => {
   useEffect(() => {
     fetchCredits();
 
-    const intervalId = setInterval(fetchCredits, 1000);
+    const intervalId = setInterval(fetchCredits, 3000);
     return () => clearInterval(intervalId);
 
   }, [credits, fetchCredits]);
@@ -51,7 +51,7 @@ export const CreditsProvider = ({ children }) => {
         const data = await response.json();
         setCredits(data.credits || 0);
       } catch (error) {
-        console.error("Error deducting credit:", error);
+        console.error("Error deducting credit:;;;nhjgb", error);
       }
     }
   };

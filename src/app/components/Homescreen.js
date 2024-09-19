@@ -29,7 +29,7 @@ const Homescreen = ({ route, onQuestionClick }) => {
           {questions.map((question, index) => (
             <div
               key={index}
-              className="border border-1 rounded-md py-3 px-6 flex flex-col justify-start items-center w-[220px] h-[140px]"
+              className="overflow-hidden border border-1 rounded-md py-3 px-6 flex flex-col justify-start items-center w-[220px] h-[140px]"
               onClick={() => onQuestionClick(question)}
             >
               <p>{question}</p>

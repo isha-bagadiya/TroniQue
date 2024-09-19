@@ -6,12 +6,15 @@ import MessageHistory from "./MessageHistory";
 import { useState } from "react";
 import { BiSend } from "react-icons/bi";
 import { useCredits } from "./CreditsContext";
+import { useAccount } from "wagmi";
 
 const MainPage = ({ route }) => {
   const [message, setMessage] = useState("");
   const [disabled, setDisabled] = useState(message.length === 0);
   const [messages, setMessages] = useState([]);
   const { credits, deductCredit } = useCredits();
+  const { address } = useAccount(); // Get wallet address from Wagmi
+  const [chatSessionId, setChatSessionId] = useState(null);
 
   const handleInputChange = (e) => {
     if (e.target.value.length > 0 && credits > 0) {
@@ -30,27 +33,61 @@ const MainPage = ({ route }) => {
     }
   };
 
+  const saveChatSession = async (updatedMessages) => {
+    try {
+      const response = await fetch("/api/save-chat-history", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          walletAddress: address,
+          route,
+          messages : updatedMessages,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save chat session");
+      }
+
+      const data = await response.json();
+      setChatSessionId(data.chatSessionId);
+      console.log("Chat session saved with ID:", data.chatSessionId);
+    } catch (error) {
+      console.error("Error saving chat session:", error);
+    }
+  };
+
   const handleSend = async () => {
     if (message.trim() && credits > 0) {
-        try {
-            await deductCredit();
-            setMessages([...messages, { type: "user", content: message }]);
+      try {
+        await deductCredit();
+        const newUserMessage = { type: "user", content: message };
+        const updatedMessages = [...messages, newUserMessage];
+        setMessages(updatedMessages);
 
-            // Simulate AI response
-            setTimeout(() => {
-                setMessages((prevMessages) => [
-                    ...prevMessages,
-                    { type: "ai", content: "This is the AI generated answer" },
-                ]);
-            }, 1000);
+        await saveChatSession(updatedMessages);
 
-            setMessage("");
-            setDisabled(true);
-        } catch (error) {
-            console.error("Error handling send:", error);
-        }
+
+        // Simulate AI response
+        setTimeout(async () => {
+          const aiMessage = {
+            type: "ai",
+            content: "This is the AI generated answer",
+          };
+          const finalMessages = [...updatedMessages, aiMessage];
+          setMessages(finalMessages);
+          await saveChatSession(finalMessages);
+        }, 1000);
+
+        setMessage("");
+        setDisabled(true);
+      } catch (error) {
+        console.error("Error handling send:", error);
+      }
     }
-};
+  };
 
   const handleQuestionClick = (question) => {
     setMessage(question);

@@ -8,15 +8,53 @@ import Image from "../../../node_modules/next/image";
 import logo from "../../../public/TroniQue.svg";
 import { useEffect, useState } from "react";
 import { useCredits } from "./CreditsContext";
+import ChatHistoryList from "./ChatHistoryList";
+import { useAccount } from "wagmi";
+
 
 export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
   const { credits, fetchCredits } = useCredits();
+  const [chatHistory, setChatHistory] = useState([]);
+  const { address } = useAccount(); // Get wallet address from Wagmi
+
+
 
   useEffect(() => {
     fetchCredits();
+    fetchChatHistory();
   }, [fetchCredits]);
+
+  const fetchChatHistory = async () => {
+    if(!address) return;
+
+    try {
+      console.log('Fetching chat history...');
+      const response = await fetch(
+      `/api/get-chat-history?walletAddress=${encodeURIComponent(address)}`
+    );
+      console.log('Response status:', response.status);
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Received data:', data);
+        setChatHistory(data.history);
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to fetch chat history:', errorData);
+        // Handle specific error cases
+        if (response.status === 404) {
+          console.error('User not found. Please check your wallet address.');
+        } else {
+          console.error('Unexpected error occurred. Please try again later.');
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching chat history:', error);
+    }
+  };
+
 
   useEffect(() => {
     if (currentPath === "/forum") {
@@ -36,6 +74,13 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
     setSelectedOption(option);
     toggleDropdown();
   };
+
+  const handleSelectChat = (chat) => {
+    // Handle selecting a chat from history
+    console.log('Selected chat:', chat);
+    // You might want to navigate to a specific chat page or load the chat in the main area
+  };
+
 
   return (
     <div className="h-full flex flex-col p-4">
@@ -108,6 +153,12 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
           </div>
         )}
       </div>
+
+      <ChatHistoryList
+        history={chatHistory}
+        isOpen={isOpen}
+        onSelectChat={handleSelectChat}
+      />
 
       <div
         className={`mt-auto mb-2 ${
