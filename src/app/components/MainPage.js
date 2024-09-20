@@ -14,7 +14,30 @@ const MainPage = ({ route }) => {
   const [messages, setMessages] = useState([]);
   const { credits, deductCredit } = useCredits();
   const { address } = useAccount(); // Get wallet address from Wagmi
-  const [chatSessionId, setChatSessionId] = useState(null);
+  const [sessionId, setSessionId] = useState(null);
+
+  
+  useEffect(() => {
+    loadExistingSession();
+  }, []);
+
+  const loadExistingSession = async () => {
+    try {
+      const option = route === "dextrades" ? "dextrades" : "forum";
+      const response = await fetch(`/api/get-chat-history?walletAddress=${address}&option=${option}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.history && data.history.length > 0) {
+          const latestSession = data.history[0];
+          setMessages(latestSession.messages || []);
+          setSessionId(latestSession._id);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading existing session:", error);
+    }
+  };
+
 
   const handleInputChange = (e) => {
     if (e.target.value.length > 0 && credits > 0) {
@@ -44,6 +67,7 @@ const MainPage = ({ route }) => {
           walletAddress: address,
           route,
           messages : updatedMessages,
+          sessionId,
         }),
       });
 
@@ -52,8 +76,9 @@ const MainPage = ({ route }) => {
       }
 
       const data = await response.json();
-      setChatSessionId(data.chatSessionId);
-      console.log("Chat session saved with ID:", data.chatSessionId);
+      setSessionId(data.sessionId);
+      console.log("Chat session saved:", data.message);
+
     } catch (error) {
       console.error("Error saving chat session:", error);
     }
@@ -67,9 +92,6 @@ const MainPage = ({ route }) => {
         const updatedMessages = [...messages, newUserMessage];
         setMessages(updatedMessages);
 
-        await saveChatSession(updatedMessages);
-
-
         // Simulate AI response
         setTimeout(async () => {
           const aiMessage = {
@@ -78,6 +100,7 @@ const MainPage = ({ route }) => {
           };
           const finalMessages = [...updatedMessages, aiMessage];
           setMessages(finalMessages);
+
           await saveChatSession(finalMessages);
         }, 1000);
 

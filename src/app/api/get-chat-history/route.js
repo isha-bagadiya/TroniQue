@@ -17,13 +17,13 @@ export async function GET(request) {
 
     // Connect to the database
     const client = await connectToDatabase();
-    console.log("Connected to database");
+    // console.log("Connected to database");
 
     const db = client.db("Tronique");
 
     // Find the user document
     const user = await db.collection("users").findOne({ address: walletAddress });
-    console.log("User found:", user ? "Yes" : "No");
+    // console.log("User found:", user ? "Yes" : "No");
 
     if (!user) {
       console.log("User not found");
@@ -32,16 +32,18 @@ export async function GET(request) {
 
     let history;
     if (option === 'forum') {
-      history = user.forumHistory || [];
+      history = [
+        ...(user.forumHistory || [])];
     } else if (option === 'dextrades') {
-      history = user.dexTradeHistory || [];
+      history = [
+        ...(user.dexTradeHistory || [])];
     } else {
       return NextResponse.json({ error: "Invalid option" }, { status: 400 });
     }
 
     history.sort((a, b) => new Date(b.startTimestamp) - new Date(a.startTimestamp));
 
-    console.log(`${option} history items:`, history.length);
+    // console.log(`${option} history items:`, history.length);
     return NextResponse.json({ history: history });
 
   } catch (error) {

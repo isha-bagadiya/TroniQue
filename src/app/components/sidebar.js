@@ -23,6 +23,14 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   }, [fetchCredits]);
 
   useEffect(() => {
+    if (selectedOption === "Forum Data") {
+      fetchChatHistory("forum");
+    } else if (selectedOption === "DexTrade Data") {
+      fetchChatHistory("dextrades");
+    }
+  });
+
+  useEffect(() => {
     if (currentPath === "/forum") {
       setSelectedOption("Forum Data");
     } else if (currentPath === "/dex-trades") {
@@ -32,13 +40,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
     }
   }, [currentPath]);
 
-  useEffect(() => {
-    if (selectedOption === "Forum Data") {
-      fetchChatHistory("forum");
-    } else if (selectedOption === "DexTrade Data") {
-      fetchChatHistory("dextrades");
-    }
-  });
+ 
 
   const fetchChatHistory = async (option) => {
     if (!address) return;
@@ -47,11 +49,11 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
       const response = await fetch(
         `/api/get-chat-history?walletAddress=${encodeURIComponent(address)}&option=${encodeURIComponent(option)}`
       );
-      console.log("Response status:", response.status);
+      // console.log("Response status:", response.status);
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Received data:", data);
+        // console.log("Received data:", data);
         setChatHistory(data.history);
       } else {
         const errorData = await response.json();
