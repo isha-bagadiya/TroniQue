@@ -30,7 +30,6 @@ export default function DashboardLayout({ children }) {
           isSidebarOpen ? "w-[80%]" : "w-[94%]"
         }`}
       >
-        {/* <nav className="ml-auto mb-2"><ConnectButton /></nav> */}
         <main className="w-full h-full">
           {children}
         </main>

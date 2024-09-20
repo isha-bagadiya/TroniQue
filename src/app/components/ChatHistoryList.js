@@ -9,7 +9,7 @@ const ChatHistoryList = ({ history, isOpen, onSelectChat }) => {
   return (
     <div className={`mt-4 ${isOpen ? 'px-4' : 'px-2'}`}>
       <h3 className={`text-white text-sm font-medium mb-2 ${isOpen ? '' : 'text-center'}`}>
-        {isOpen ? 'Chat History' : <FaHistory />}
+        {isOpen ? 'History' : ""}
       </h3>
       <ul className="space-y-2">
         {history.map((chat, index) => (
@@ -17,7 +17,7 @@ const ChatHistoryList = ({ history, isOpen, onSelectChat }) => {
             <button
               onClick={() => onSelectChat(chat)}
               className={`w-full text-left text-white text-sm hover:bg-gray-700 rounded p-2 ${
-                isOpen ? '' : 'text-center'
+                isOpen ? '' : 'hidden'
               }`}
             >
               {isOpen

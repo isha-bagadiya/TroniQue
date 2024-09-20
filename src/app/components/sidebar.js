@@ -11,7 +11,6 @@ import { useCredits } from "./CreditsContext";
 import ChatHistoryList from "./ChatHistoryList";
 import { useAccount } from "wagmi";
 
-
 export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
@@ -19,42 +18,9 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const [chatHistory, setChatHistory] = useState([]);
   const { address } = useAccount(); // Get wallet address from Wagmi
 
-
-
   useEffect(() => {
     fetchCredits();
-    fetchChatHistory();
   }, [fetchCredits]);
-
-  const fetchChatHistory = async () => {
-    if(!address) return;
-
-    try {
-      console.log('Fetching chat history...');
-      const response = await fetch(
-      `/api/get-chat-history?walletAddress=${encodeURIComponent(address)}`
-    );
-      console.log('Response status:', response.status);
-  
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Received data:', data);
-        setChatHistory(data.history);
-      } else {
-        const errorData = await response.json();
-        console.error('Failed to fetch chat history:', errorData);
-        // Handle specific error cases
-        if (response.status === 404) {
-          console.error('User not found. Please check your wallet address.');
-        } else {
-          console.error('Unexpected error occurred. Please try again later.');
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching chat history:', error);
-    }
-  };
-
 
   useEffect(() => {
     if (currentPath === "/forum") {
@@ -66,6 +32,42 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
     }
   }, [currentPath]);
 
+  useEffect(() => {
+    if (selectedOption === "Forum Data") {
+      fetchChatHistory("forum");
+    } else if (selectedOption === "DexTrade Data") {
+      fetchChatHistory("dextrades");
+    }
+  });
+
+  const fetchChatHistory = async (option) => {
+    if (!address) return;
+
+    try {
+      const response = await fetch(
+        `/api/get-chat-history?walletAddress=${encodeURIComponent(address)}&option=${encodeURIComponent(option)}`
+      );
+      console.log("Response status:", response.status);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Received data:", data);
+        setChatHistory(data.history);
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to fetch chat history:", errorData);
+        // Handle specific error cases
+        if (response.status === 404) {
+          console.error("User not found. Please check your wallet address.");
+        } else {
+          console.error("Unexpected error occurred. Please try again later.");
+        }
+      }
+    } catch (error) {
+      console.error(`Error fetching ${option} chat history:`, error);
+    }
+  };
+
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
@@ -73,14 +75,16 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     toggleDropdown();
+    if (option === "Forum Data") {
+      fetchChatHistory("forum");
+    } else if (option === "DexTrade Data") {
+      fetchChatHistory("dextrades");
+    }
   };
 
   const handleSelectChat = (chat) => {
-    // Handle selecting a chat from history
-    console.log('Selected chat:', chat);
-    // You might want to navigate to a specific chat page or load the chat in the main area
+    console.log("Selected chat:", chat);
   };
-
 
   return (
     <div className="h-full flex flex-col p-4">
