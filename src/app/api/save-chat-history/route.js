@@ -18,13 +18,13 @@ export async function POST(request) {
     if (sessionId) {
       // Update existing session
       const result = await db.collection("users").updateOne(
-        { address: walletAddress, [`${historyField}._id`]: new ObjectId(sessionId) },
+        { address: walletAddress, [`${historyField}.sessionId`]: sessionId },
         { 
           $set: { 
             [`${historyField}.$.messages`]: messages,
             [`${historyField}.$.lastUpdateTimestamp`]: new Date()
           }
-        }
+        },
       );
 
       if (result.modifiedCount === 0) {
@@ -37,8 +37,11 @@ export async function POST(request) {
       });
     } else {
       // Create new session
+      const newObjectId = new ObjectId();
+      const newSessionId = newObjectId.toString();
       const newSession = {
-        _id: new ObjectId(),
+        _id: newObjectId,
+        sessionId: newSessionId,
         messages,
         startTimestamp: new Date(),
         lastUpdateTimestamp: new Date(),
@@ -56,7 +59,7 @@ export async function POST(request) {
 
       return NextResponse.json({ 
         message: "New chat session created successfully", 
-        sessionId: newSession._id.toString() 
+        sessionId: newSessionId
       });
     }
   } catch (error) {

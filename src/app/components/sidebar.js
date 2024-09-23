@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { useCredits } from "./CreditsContext";
 import ChatHistoryList from "./ChatHistoryList";
 import { useAccount } from "wagmi";
+import { useChatState } from "./ChatStateManager";
+
 
 export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -17,6 +19,8 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const { credits, fetchCredits } = useCredits();
   const [chatHistory, setChatHistory] = useState([]);
   const { address } = useAccount(); // Get wallet address from Wagmi
+  const { handleSelectChat } = useChatState();
+
 
   useEffect(() => {
     fetchCredits();
@@ -49,11 +53,9 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
       const response = await fetch(
         `/api/get-chat-history?walletAddress=${encodeURIComponent(address)}&option=${encodeURIComponent(option)}`
       );
-      // console.log("Response status:", response.status);
 
       if (response.ok) {
         const data = await response.json();
-        // console.log("Received data:", data);
         setChatHistory(data.history);
       } else {
         const errorData = await response.json();
@@ -84,9 +86,12 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
     }
   };
 
-  const handleSelectChat = (chat) => {
+  const handleChatSelect = (chat) => {
     console.log("Selected chat:", chat);
+    console.log("Selected chat SessionID:", chat.sessionId);
+    handleSelectChat(chat.sessionId);
   };
+
 
   return (
     <div className="h-full flex flex-col p-4">
@@ -163,7 +168,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
       <ChatHistoryList
         history={chatHistory}
         isOpen={isOpen}
-        onSelectChat={handleSelectChat}
+        onSelectChat={handleChatSelect}
       />
 
       <div

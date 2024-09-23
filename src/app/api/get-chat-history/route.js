@@ -7,6 +7,9 @@ export async function GET(request) {
     const walletAddress = url.searchParams.get('walletAddress');
     const option = url.searchParams.get('option');
 
+    console.log(`Received request for walletAddress: ${walletAddress}, option: ${option}`);
+
+
     if (!walletAddress) {
         return NextResponse.json({ error: "Missing wallet address" }, { status: 400 });
     }
@@ -17,13 +20,10 @@ export async function GET(request) {
 
     // Connect to the database
     const client = await connectToDatabase();
-    // console.log("Connected to database");
-
     const db = client.db("Tronique");
 
     // Find the user document
     const user = await db.collection("users").findOne({ address: walletAddress });
-    // console.log("User found:", user ? "Yes" : "No");
 
     if (!user) {
       console.log("User not found");

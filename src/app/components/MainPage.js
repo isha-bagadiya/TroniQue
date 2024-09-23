@@ -1,12 +1,11 @@
 "use client";
-
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Homescreen from "./Homescreen";
 import MessageHistory from "./MessageHistory";
-import { useState } from "react";
 import { BiSend } from "react-icons/bi";
 import { useCredits } from "./CreditsContext";
 import { useAccount } from "wagmi";
+import { useChatState } from "./ChatStateManager";
 
 const MainPage = ({ route }) => {
   const [message, setMessage] = useState("");
@@ -14,30 +13,41 @@ const MainPage = ({ route }) => {
   const [messages, setMessages] = useState([]);
   const { credits, deductCredit } = useCredits();
   const { address } = useAccount(); // Get wallet address from Wagmi
+  const { selectedSessionId } = useChatState();
   const [sessionId, setSessionId] = useState(null);
 
-  
   useEffect(() => {
-    loadExistingSession();
-  }, []);
-
-  const loadExistingSession = async () => {
-    try {
-      const option = route === "dextrades" ? "dextrades" : "forum";
-      const response = await fetch(`/api/get-chat-history?walletAddress=${address}&option=${option}`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.history && data.history.length > 0) {
-          const latestSession = data.history[0];
-          setMessages(latestSession.messages || []);
-          setSessionId(latestSession._id);
+    const loadSession = async () => {
+      if (selectedSessionId) {
+        try {
+          console.log("trying to fetch");
+          const response = await fetch(
+            `/api/get-messages?sessionId=${selectedSessionId}&walletAddress=${address}&route=${route}`
+          );
+          console.log(response);
+          if (!response.ok) {
+            throw new Error("Failed to load chat session");
+          }
+          const data = await response.json();
+          console.log("dataaaaa", data);
+          if (Array.isArray(data.messages)) {
+            setMessages(data.messages);
+            console.log("Messages set:", data.messages);
+          } else {
+            console.error(
+              "Received data does not contain a messages array:",
+              data
+            );
+          }
+          setSessionId(data.sessionId);
+        } catch (error) {
+          console.error("Error loading chat session:", error);
         }
       }
-    } catch (error) {
-      console.error("Error loading existing session:", error);
-    }
-  };
+    };
 
+    loadSession();
+  }, [selectedSessionId, address, route]);
 
   const handleInputChange = (e) => {
     if (e.target.value.length > 0 && credits > 0) {
@@ -66,7 +76,7 @@ const MainPage = ({ route }) => {
         body: JSON.stringify({
           walletAddress: address,
           route,
-          messages : updatedMessages,
+          messages: updatedMessages,
           sessionId,
         }),
       });
@@ -78,7 +88,6 @@ const MainPage = ({ route }) => {
       const data = await response.json();
       setSessionId(data.sessionId);
       console.log("Chat session saved:", data.message);
-
     } catch (error) {
       console.error("Error saving chat session:", error);
     }

@@ -21,7 +21,7 @@ const ChatHistoryList = ({ history, isOpen, onSelectChat }) => {
               }`}
             >
               {isOpen
-                ? `Chat ${index + 1} - ${new Date(chat.startTimestamp).toLocaleDateString()}`
+                ? `Chat - ${new Date(chat.startTimestamp).toLocaleDateString()}`
                 : index + 1}
             </button>
           </li>
