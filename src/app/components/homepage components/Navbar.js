@@ -44,8 +44,7 @@ const Navbar = () => {
             <Link href="/">
                 <Image src={logo} alt='logo'></Image>
             </Link>
-            <ConnectButton />
-
+            <ConnectButton showBalance={false} />
         </div>
     )
 }

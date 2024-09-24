@@ -1,43 +1,68 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
-import img1 from "../../../../public/Illustration1.svg";
+import React, { useState } from "react";
+import img1 from "../../../../public/Img 1.svg";
 import img2 from "../../../../public/Illustration2.svg";
 import img3 from "../../../../public/Illustration3.svg";
 import img4 from "../../../../public/Illustration4.svg";
 import Link from "next/link";
+import { useConnect, useAccount } from "wagmi";
+import GetStarted from "../GetStarted";
 
 const Homepage = () => {
-  return (
-    <div className="w-[90%] mx-auto px-16">
-      <div className="w-full h-10 bg-red-600 rounded-full my-3"></div>
+  const { connect, connectors, isLoading, pendingConnector } = useConnect();
+  const { isConnected } = useAccount();
+  const [showWalletPopup, setShowWalletPopup] = useState(false);
 
-      <div className="w-full flex flex-col gap-4">
-        <div className="flex items-center justify-between my-10">
-          <div className="w-[52%] flex flex-col">
-            <h1 className="text-7xl font-bold w-full">TroniQue:</h1>
-            <h1 className="text-5xl w-full my-5 leading-tight">
+  return (
+    <div className="w-[90%] mx-auto px-16 font-regular-actay ">
+      <div className="w-full flex flex-col">
+        <div className="flex flex-col items-center mt-10 h-[75vh] overflow-hidden">
+          <div className="w-full flex flex-col items-center">
+            <h1 className="text-6xl text-center w-[90%] mx-auto leading-tight">
+              <span className="bg-tronique bg-clip-text text-transparent">
+                TroniQue:
+              </span>{" "}
               Simplifying Tron and Empowering Users with TroniQue
             </h1>
-            <p className="text-xl text-justify">
+            <p className="text-xl text-center mt-5">
               Navigate the world of TRON with unmatched ease and insight
             </p>
+
+            {!isConnected && (
+              <div className="bg-tronique rounded-full overflow-hidden p-[1px] w-[140px] h-[50px] relative z-20 flex items-center justify-center my-6">
+                <div className="bg-[#621D1D] w-full h-full rounded-full hover:bg-[#621d1da1]">
+                  <GetStarted />
+                </div>
+              </div>
+            )}
+            {isConnected && (
+              <Link href="/forum">
+                <div className="bg-tronique rounded-full overflow-hidden p-[1px] w-[140px] h-[50px] relative z-20 flex items-center justify-center my-6">
+                  <div className="bg-[#621D1D] w-full h-full rounded-full hover:bg-[#621d1da1]">
+                    <button className="z-20 relative rounded-full w-full h-full bg-gradient-to-b from-[#621d1d52] to-[#DE082D4D] font-light">
+                      Get Started
+                    </button>
+                  </div>
+                </div>
+              </Link>
+            )}
           </div>
-          <div className="w-[33%] h-max">
+          <div className="w-full h-max -mt-36 z-10 relative">
             <Image
               src={img1}
               alt="img1"
-              className="w-full h-auto"
+              className="w-[75%] h-auto mx-auto"
               loading="lazy"
             ></Image>
           </div>
         </div>
 
-        <div className="flex items-center justify-between my-10">
+        <div className="flex items-center justify-between p-10 py-14 bg-gradient-to-b from-[#242424f0] to-[#1d1a1afb] rounded-2xl w-full mb-10">
           <div className="w-[52%] flex flex-col">
             <h2 className="text-4xl font-bold text-red-400">Community Pulse</h2>
-            <h4 className="text-2xl my-5 leading-tight">
+            <h4 className="text-xl my-5 leading-tight">
               Explore the Pulse of the Community
             </h4>
             <p className="text-base text-justify">
@@ -46,11 +71,14 @@ const Homepage = () => {
               analyze conversations to stay on top of the latest topics,
               community opinions, and key discussions.
             </p>
-            <Link href="/forum">
-              <button className="px-4 py-2 rounded-full border border-white w-max mt-4">
-                Get Started
-              </button>
-            </Link>
+            {/* {!isConnected && <GetStarted />} */}
+            {isConnected && (
+              <Link href="/forum">
+                <button className="px-6 py-2 rounded-full border border-white w-max mt-4">
+                  Get Started
+                </button>
+              </Link>
+            )}
           </div>
           <div className="w-[33%] h-max">
             <Image
@@ -62,10 +90,10 @@ const Homepage = () => {
           </div>
         </div>
 
-        <div className="flex flex-row-reverse items-center justify-between my-10">
+        <div className="flex flex-row-reverse items-center justify-between p-10 py-14 bg-gradient-to-b from-[#242424f0] to-[#1d1a1afb] rounded-2xl w-full my-10">
           <div className="w-[52%] flex flex-col">
             <h2 className="text-4xl font-bold text-red-400">Market Dynamics</h2>
-            <h4 className="text-2xl my-5 leading-tight">
+            <h4 className="text-xl my-5 leading-tight">
               Track and Analyze Decentralized Exchanges with Ease
             </h4>
             <p className="text-base text-justify">
@@ -75,11 +103,15 @@ const Homepage = () => {
               energy usage, and analyze trade patterns to make informed
               decisions.
             </p>
-            <Link href="/dex-trades">
-              <button className="px-4 py-2 rounded-full border border-white w-max mt-4">
-                Get Started
-              </button>
-            </Link>
+            {/* {!isConnected && <GetStarted />} */}
+
+            {isConnected && (
+              <Link href="/dex-trades">
+                <button className="px-6 py-2 rounded-full border border-white w-max mt-4">
+                  Get Started
+                </button>
+              </Link>
+            )}
           </div>
           <div className="w-[33%] h-max">
             <Image
@@ -91,12 +123,12 @@ const Homepage = () => {
           </div>
         </div>
 
-        <div className="flex flex-row items-center justify-between my-10">
+        <div className="flex items-center justify-between p-10 py-14 bg-gradient-to-b from-[#242424f0] to-[#1d1a1afb] rounded-2xl w-full my-10">
           <div className="w-[52%] flex flex-col">
             <h2 className="text-4xl font-bold text-red-400">
               Documentation Gateway
             </h2>
-            <h4 className="text-2xl my-5 leading-tight">
+            <h4 className="text-xl my-5 leading-tight">
               Access All Essential Information in One Place
             </h4>
             <p className="text-base text-justify">
@@ -107,16 +139,11 @@ const Homepage = () => {
               knowledgeable guide right at your fingertips, making sure you get
               the precise data you need without the usual hassle.
             </p>
-            <button
-              className="px-4 py-2 rounded-full border border-white w-max mt-4"
-              onClick={() =>
-                toast("Coming Soon 🚀", {
-                  duration: 1000,
-                })
-              }
-            >
-              Get Started
-            </button>
+            {isConnected && (
+              <button className="px-6 py-2 rounded-full border border-white w-max mt-4">
+                Get Started
+              </button>
+            )}
           </div>
           <div className="w-[33%] h-max">
             <Image
@@ -128,6 +155,7 @@ const Homepage = () => {
           </div>
         </div>
       </div>
+      {showWalletPopup && <WalletConnectPopup />}
     </div>
   );
 };

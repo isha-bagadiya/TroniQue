@@ -11,6 +11,12 @@ module.exports = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        'regular-actay': ['Regular', 'sans-serif']
+      },
+      backgroundImage: {
+        'tronique': 'linear-gradient(91.55deg, #FFC7D1 0.23%, #FB506E 40.27%)',
+      },
     },
   },
   plugins: [],

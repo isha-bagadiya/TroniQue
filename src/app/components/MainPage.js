@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Homescreen from "./Homescreen";
 import MessageHistory from "./MessageHistory";
 import { BiSend } from "react-icons/bi";
@@ -15,6 +15,13 @@ const MainPage = ({ route }) => {
   const { address } = useAccount(); // Get wallet address from Wagmi
   const { selectedSessionId } = useChatState();
   const [sessionId, setSessionId] = useState(null);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  });
 
   useEffect(() => {
     const loadSession = async () => {
@@ -124,6 +131,9 @@ const MainPage = ({ route }) => {
   const handleQuestionClick = (question) => {
     setMessage(question);
     setDisabled(credits === 0);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   return (
@@ -137,6 +147,7 @@ const MainPage = ({ route }) => {
       </div>
       <div className="flex items-center justify-between rounded-full bg-white w-full pl-5 pr-2 h-[45px] mb-3 absolute bottom-0">
         <input
+          ref={inputRef}
           type="text"
           className={`w-full h-full bg-transparent border-none outline-none ${
             message.trim() ? "text-black" : "text-[#848484]"

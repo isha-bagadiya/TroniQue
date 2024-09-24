@@ -1,9 +1,26 @@
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
-import { arbitrum, base, mainnet, optimism, polygon } from "viem/chains";
+import { bitTorrent } from "wagmi/chains";
+
+const bttcTestnet = {
+  id: 1029, 
+  name: 'BitTorrent Testnet',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'BTT',
+    symbol: 'BTT',
+  },
+  rpcUrls: {
+    public: { http: ['https://pre-rpc.bt.io/'] },
+    default: { http: ['https://pre-rpc.bt.io/'] },
+  },
+  blockExplorers: {
+    default: { name: 'BTT Scan', url: 'https://testscan.bt.io' },
+  },
+}
 
 export const config = getDefaultConfig({
-  appName: "vaults",
+  appName: "TroniQue",
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-  chains: [mainnet, polygon, optimism, arbitrum, base],
+  chains: [bitTorrent, bttcTestnet],
   ssr: true,
 });

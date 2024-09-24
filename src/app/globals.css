@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Regular";
+  src: url("../../public/font/Actay-Regular.otf");
+}
+
 :root {
   --background: #0a0a0a;
   --foreground: #ededed;
@@ -9,9 +14,15 @@
 
 body {
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(90.71deg, #2f2f2f 0%, #111111 98.8%);
-  scrollbar-width: none;
+  scrollbar-width: none !important;
+  background-color: #121212;
+  background-image: linear-gradient(#4b22223c 1px, transparent 0.2px),
+    linear-gradient(90deg, #4b22224a 1px, transparent 0.2px);
+  background-size: 90px 90px;
+}
+
+::-webkit-scrollbar {
+  width: 0px; /* Width of the scrollbar */
 }
 
 @layer utilities {
@@ -26,16 +37,32 @@ body {
   box-sizing: border-box;
 }
 
-[data-rk] .ju367v9i {
-  background-color: #dc2626 !important;
+[data-rk] .ju367v9i,
+[data-rk] .ju367va3 {
+  background: linear-gradient(
+    90.36deg,
+    #de082d 0.27%,
+    #fb5c78 71.56%
+  ) !important;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+[data-rk] .ju367vn {
+  border-radius: 63px !important;
 }
 
-.scrollbar-hide {
-  -ms-overflow-style: none; 
-  scrollbar-width: none; 
+[data-rk] .ju367vcl {
+  border: none !important;
 }
 
+[data-rk] .ju367v7t {
+  padding-right: 23px !important;
+}
+
+[data-rk] .ju367v78 {
+  padding-left: 23px !important;
+}
+
+.border-image-gradient {
+  border-image-source: linear-gradient(180deg, #fb5c78 0%, #ffa4a4 100%);
+  border-image-slice: 1;
+}

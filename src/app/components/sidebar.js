@@ -12,7 +12,6 @@ import ChatHistoryList from "./ChatHistoryList";
 import { useAccount } from "wagmi";
 import { useChatState } from "./ChatStateManager";
 
-
 export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
@@ -20,7 +19,6 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const [chatHistory, setChatHistory] = useState([]);
   const { address } = useAccount(); // Get wallet address from Wagmi
   const { handleSelectChat } = useChatState();
-
 
   useEffect(() => {
     fetchCredits();
@@ -44,14 +42,14 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
     }
   }, [currentPath]);
 
- 
-
   const fetchChatHistory = async (option) => {
     if (!address) return;
 
     try {
       const response = await fetch(
-        `/api/get-chat-history?walletAddress=${encodeURIComponent(address)}&option=${encodeURIComponent(option)}`
+        `/api/get-chat-history?walletAddress=${encodeURIComponent(
+          address
+        )}&option=${encodeURIComponent(option)}`
       );
 
       if (response.ok) {
@@ -92,6 +90,9 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
     handleSelectChat(chat.sessionId);
   };
 
+  const handleNewChat = () => {
+    window.location.reload();
+  };
 
   return (
     <div className="h-full flex flex-col p-4">
@@ -121,7 +122,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
               <MdOutlineMenu className="text-white text-3xl" />
             )}
           </button>
-          <button className="my-5">
+          <button className="my-5 transition hover:-translate-y-1 hover:scale-110 duration-300" onClick={handleNewChat}>
             <RiChatNewFill className="text-white rounded-lg text-3xl text-center" />
           </button>
         </div>
