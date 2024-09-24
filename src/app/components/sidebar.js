@@ -9,15 +9,16 @@ import logo from "../../../public/TroniQue.svg";
 import { useEffect, useState } from "react";
 import { useCredits } from "./CreditsContext";
 import ChatHistoryList from "./ChatHistoryList";
-import { useAccount } from "wagmi";
+import { useWallet } from '@tronweb3/tronwallet-adapter-react-hooks';
 import { useChatState } from "./ChatStateManager";
+import { WalletActionButton } from "@tronweb3/tronwallet-adapter-react-ui";
 
 export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
   const { credits, fetchCredits } = useCredits();
   const [chatHistory, setChatHistory] = useState([]);
-  const { address } = useAccount(); // Get wallet address from Wagmi
+  const { address } = useWallet(); // Get wallet address from Wagmi
   const { handleSelectChat } = useChatState();
 
   useEffect(() => {
@@ -185,8 +186,8 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
           isOpen ? "justify-between" : "justify-center"
         } p-2 border-t border-gray-700`}
       >
-        <div className="w-7 h-7 rounded-full bg-gray-600 flex items-center justify-center">
-          <FaUser className="text-white" />
+         <div className="w-full h-10 rounded-full flex items-center justify-center overflow-hidden">
+          <WalletActionButton />
         </div>
       </div>
     </div>

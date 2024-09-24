@@ -4,7 +4,7 @@ import Homescreen from "./Homescreen";
 import MessageHistory from "./MessageHistory";
 import { BiSend } from "react-icons/bi";
 import { useCredits } from "./CreditsContext";
-import { useAccount } from "wagmi";
+import { useWallet } from '@tronweb3/tronwallet-adapter-react-hooks';
 import { useChatState } from "./ChatStateManager";
 
 const MainPage = ({ route }) => {
@@ -12,7 +12,7 @@ const MainPage = ({ route }) => {
   const [disabled, setDisabled] = useState(message.length === 0);
   const [messages, setMessages] = useState([]);
   const { credits, deductCredit } = useCredits();
-  const { address } = useAccount(); // Get wallet address from Wagmi
+  const { address } = useWallet(); // Get wallet address from Wagmi
   const { selectedSessionId } = useChatState();
   const [sessionId, setSessionId] = useState(null);
   const inputRef = useRef(null);

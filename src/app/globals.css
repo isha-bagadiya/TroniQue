@@ -37,32 +37,44 @@ body {
   box-sizing: border-box;
 }
 
-[data-rk] .ju367v9i,
-[data-rk] .ju367va3 {
-  background: linear-gradient(
-    90.36deg,
-    #de082d 0.27%,
-    #fb5c78 71.56%
-  ) !important;
-}
-
-[data-rk] .ju367vn {
-  border-radius: 63px !important;
-}
-
-[data-rk] .ju367vcl {
-  border: none !important;
-}
-
-[data-rk] .ju367v7t {
-  padding-right: 23px !important;
-}
-
-[data-rk] .ju367v78 {
-  padding-left: 23px !important;
-}
 
 .border-image-gradient {
   border-image-source: linear-gradient(180deg, #fb5c78 0%, #ffa4a4 100%);
   border-image-slice: 1;
 }
+
+.adapter-wallet-item{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.adapter-react-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 12px 20px;
+  border-radius: 63px;
+  min-width: 140px;
+  background: linear-gradient(90.36deg, #DE082D 0.27%, #FB5C78 71.56%);
+}
+
+.button-icon {
+  display: none !important;
+  width: 0px !important;
+}
+.adapter-dropdown-list{
+  background: linear-gradient(190.36deg, #DE082D 0.27%, #FB5C78 71.56%);
+}
+
+.adapter-dropdown-list li:hover {
+  background: linear-gradient(258.36deg, #a71830cb 0.27%, #fe002fc1 71.56%);
+}
+
+/* .adapter-dropdown-collapse{
+  position: absolute;
+  bottom: 0 !important;
+  overflow: visible !important;
+  height: 0px !important;
+} */
+

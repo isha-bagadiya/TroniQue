@@ -7,12 +7,11 @@ import img2 from "../../../../public/Illustration2.svg";
 import img3 from "../../../../public/Illustration3.svg";
 import img4 from "../../../../public/Illustration4.svg";
 import Link from "next/link";
-import { useConnect, useAccount } from "wagmi";
-import GetStarted from "../GetStarted";
+import { useWallet } from '@tronweb3/tronwallet-adapter-react-hooks';
+import { WalletActionButton } from "@tronweb3/tronwallet-adapter-react-ui";
 
 const Homepage = () => {
-  const { connect, connectors, isLoading, pendingConnector } = useConnect();
-  const { isConnected } = useAccount();
+  const { connected } = useWallet();
   const [showWalletPopup, setShowWalletPopup] = useState(false);
 
   return (
@@ -30,14 +29,14 @@ const Homepage = () => {
               Navigate the world of TRON with unmatched ease and insight
             </p>
 
-            {!isConnected && (
+            {!connected && (
               <div className="bg-tronique rounded-full overflow-hidden p-[1px] w-[140px] h-[50px] relative z-20 flex items-center justify-center my-6">
                 <div className="bg-[#621D1D] w-full h-full rounded-full hover:bg-[#621d1da1]">
-                  <GetStarted />
+                <WalletActionButton children={'Get Started'}/>
                 </div>
               </div>
             )}
-            {isConnected && (
+            {connected && (
               <Link href="/forum">
                 <div className="bg-tronique rounded-full overflow-hidden p-[1px] w-[140px] h-[50px] relative z-20 flex items-center justify-center my-6">
                   <div className="bg-[#621D1D] w-full h-full rounded-full hover:bg-[#621d1da1]">
@@ -72,7 +71,7 @@ const Homepage = () => {
               community opinions, and key discussions.
             </p>
             {/* {!isConnected && <GetStarted />} */}
-            {isConnected && (
+            {connected && (
               <Link href="/forum">
                 <button className="px-6 py-2 rounded-full border border-white w-max mt-4">
                   Get Started
@@ -105,7 +104,7 @@ const Homepage = () => {
             </p>
             {/* {!isConnected && <GetStarted />} */}
 
-            {isConnected && (
+            {connected && (
               <Link href="/dex-trades">
                 <button className="px-6 py-2 rounded-full border border-white w-max mt-4">
                   Get Started
@@ -139,7 +138,7 @@ const Homepage = () => {
               knowledgeable guide right at your fingertips, making sure you get
               the precise data you need without the usual hassle.
             </p>
-            {isConnected && (
+            {connected && (
               <button className="px-6 py-2 rounded-full border border-white w-max mt-4">
                 Get Started
               </button>

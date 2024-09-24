@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
-import { useAccount } from "wagmi";
+import { useWallet } from '@tronweb3/tronwallet-adapter-react-hooks';
 
 const CreditsContext = createContext();
 
@@ -8,7 +8,7 @@ export const useCredits = () => useContext(CreditsContext);
 
 export const CreditsProvider = ({ children }) => {
   const [credits, setCredits] = useState(100);
-  const { address } = useAccount(); // Get wallet address from Wagmi
+  const { address } = useWallet(); // Get wallet address from Wagmi
 
   
   const fetchCredits = useCallback(async () => {

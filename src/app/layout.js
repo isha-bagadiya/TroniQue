@@ -1,8 +1,6 @@
-import localFont from "next/font/local";
 import "./globals.css";
-import { Providers } from "./providers";
-import "@rainbow-me/rainbowkit/styles.css";
 import { CreditsProvider } from "./components/CreditsContext";
+import {TronLinkProvider} from "./providers"
 
 export const metadata = {
   title: "Tronique",
@@ -13,9 +11,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Providers>
+        <TronLinkProvider>
           <CreditsProvider>{children}</CreditsProvider>
-        </Providers>
+          </TronLinkProvider>
       </body>
     </html>
   );
