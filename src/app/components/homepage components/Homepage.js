@@ -12,7 +12,6 @@ import { WalletActionButton } from "@tronweb3/tronwallet-adapter-react-ui";
 
 const Homepage = () => {
   const { connected } = useWallet();
-  const [showWalletPopup, setShowWalletPopup] = useState(false);
 
   return (
     <div className="w-[90%] mx-auto px-16 font-regular-actay ">
@@ -154,7 +153,6 @@ const Homepage = () => {
           </div>
         </div>
       </div>
-      {showWalletPopup && <WalletConnectPopup />}
     </div>
   );
 };
