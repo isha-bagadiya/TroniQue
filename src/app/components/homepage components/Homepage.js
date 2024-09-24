@@ -32,7 +32,7 @@ const Homepage = () => {
             {!connected && (
               <div className="bg-tronique rounded-full overflow-hidden p-[1px] w-[140px] h-[50px] relative z-20 flex items-center justify-center my-6">
                 <div className="bg-[#621D1D] w-full h-full rounded-full hover:bg-[#621d1da1]">
-                <WalletActionButton children={'Get Started'}/>
+                <WalletActionButton>Get Started</WalletActionButton>
                 </div>
               </div>
             )}

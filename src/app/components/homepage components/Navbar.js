@@ -48,7 +48,7 @@ const Navbar = () => {
         <Image src={logo} alt="logo"></Image>
       </Link>
       {!connected && 
-      <WalletActionButton children={'Connect Wallet'}/>}
+        <WalletActionButton>Connect Wallet</WalletActionButton>}
       {connected && <WalletActionButton />}
     </div>
   );
