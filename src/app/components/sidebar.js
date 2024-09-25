@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { FaUser } from "react-icons/fa";
 import { MdOutlineMenuOpen, MdOutlineMenu } from "react-icons/md";
 import { RiChatNewFill } from "react-icons/ri";
-import { FaCaretDown } from "react-icons/fa";
+import { FaArrowDown, FaCaretDown } from "react-icons/fa";
 
 import Image from "../../../node_modules/next/image";
 import logo from "../../../public/TroniQue.svg";
@@ -20,11 +19,14 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const { credits, fetchCredits } = useCredits();
   const [chatHistory, setChatHistory] = useState([]);
   const { address } = useWallet(); // Get wallet address from Wagmi
-  const { handleSelectChat } = useChatState();
+  const { handleSelectChat, handleSubOption } = useChatState();
+  const [showForum, setShowForum] = useState(false);
+  const [subOption, setSubOption] = useState("Topic");
 
   useEffect(() => {
     fetchCredits();
-  }, [fetchCredits]);
+    handleSubOption(subOption);
+  }, [fetchCredits, subOption]);
 
   useEffect(() => {
     if (selectedOption === "Forum Data") {
@@ -51,7 +53,11 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
       const response = await fetch(
         `/api/get-chat-history?walletAddress=${encodeURIComponent(
           address
-        )}&option=${encodeURIComponent(option)}`
+        )}&option=${encodeURIComponent(option)}${
+          subOption
+            ? `&subOption=${encodeURIComponent(subOption)}`
+            : ""
+        }`
       );
 
       if (response.ok) {
@@ -75,14 +81,18 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
+  const toggle = () => {
+    setShowForum(!showForum);
+  };
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
-    toggleDropdown();
     if (option === "Forum Data") {
       fetchChatHistory("forum");
+      toggle();
     } else if (option === "DexTrade Data") {
       fetchChatHistory("dextrades");
+      toggleDropdown();
     }
   };
 
@@ -96,17 +106,15 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
     window.location.reload();
   };
 
+  const handleSubOptionSelect = (option) => {
+    setSubOption(option);
+    handleSubOption(option);
+    toggleDropdown();
+  };
+
   return (
     <div className="h-full flex flex-col p-4">
       <div className="flex justify-center items-center">
-        {/* <Link href="/">
-          <Image
-            src={logo}
-            alt="logo"
-            className={`${isOpen ? "w-[120px] h-auto" : "hidden"}`}
-          ></Image>
-        </Link> */}
-
         <div
           className={`${
             isOpen
@@ -148,21 +156,41 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
             className={`${
               isOpen
                 ? "w-full bg-transparent"
-                : "absolute w-max left-8 bg-black"
-            } my-1 flex flex-col rounded-md border border-gray-500 text-nowrap overflow-hidden`}
+                : "z-50 absolute w-[200px] left-6 bg-black"
+            } my-1 p-1 flex flex-col rounded-md border border-gray-500 text-nowrap overflow-hidden`}
           >
             <Link href="/forum">
               <button
                 onClick={() => handleOptionSelect("Forum Data")}
-                className="w-full px-6 py-3 text-sm hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2]"
+                className="w-full px-2 py-[10px] rounded-md text-left text-sm hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] flex items-center justify-between"
               >
-                Forum Data
+                Forum Data <FaCaretDown className="ml-auto" />
               </button>
             </Link>
+
+            {showForum && (
+              <div className="flex justify-between my-1 px-2">
+                {["Topic", "User", "Post"].map((option) => (
+                  <button
+                    key={option}
+                    value={option}
+                    onClick={() => handleSubOptionSelect(option)}
+                    className={`w-[31.5%] px-2 py-2 border border-gray-500 text-xs rounded hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] ${
+                      subOption === option
+                        ? "bg-gradient-to-r from-[#DE082D] to-[#FB5C78]"
+                        : ""
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            )}
+
             <Link href="/dex-trades">
               <button
                 onClick={() => handleOptionSelect("DexTrade Data")}
-                className="w-full px-6 py-3 text-sm hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2]"
+                className="w-full text-left px-2 py-[10px] rounded-md text-sm hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2]"
               >
                 DexTrade Data
               </button>
@@ -170,7 +198,11 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
           </div>
         )}
       </div>
-      <div className={`${isOpen? "" : "hidden"} ${showDropdown ? " h-[50vh] " : " h-[65vh] " } overflow-scroll`}>
+      <div
+        className={`${isOpen ? "" : "hidden"} ${
+          showDropdown ? " h-[52vh] " : " h-[67vh] "
+        } overflow-scroll`}
+      >
         <ChatHistoryList
           history={chatHistory}
           isOpen={isOpen}

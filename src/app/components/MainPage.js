@@ -13,10 +13,10 @@ const MainPage = ({ route }) => {
   const [messages, setMessages] = useState([]);
   const { credits, deductCredit } = useCredits();
   const { address } = useWallet(); // Get wallet address from Wagmi
-  const { selectedSessionId } = useChatState();
+  const { selectedSessionId, selectedSubOption } = useChatState();
   const [sessionId, setSessionId] = useState(null);
   const inputRef = useRef(null);
-
+console.log("subbbbbbbbbbbbbbbbbb", selectedSubOption)
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
@@ -85,6 +85,7 @@ const MainPage = ({ route }) => {
           route,
           messages: updatedMessages,
           sessionId,
+          subOption: route === "forum" ? selectedSubOption : undefined,
         }),
       });
 

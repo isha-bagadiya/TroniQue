@@ -3,7 +3,7 @@ import connectToDatabase from "../../utils/mongodb";
 import { ObjectId } from "mongodb";
 
 export async function POST(request) {
-  const { walletAddress, route, messages, sessionId } = await request.json();
+  const { walletAddress, route, messages, sessionId, subOption } = await request.json();
 
   if (!walletAddress || !route || !messages) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -17,14 +17,19 @@ export async function POST(request) {
 
     if (sessionId) {
       // Update existing session
+      const updateObj = { 
+        [`${historyField}.$.messages`]: messages,
+        [`${historyField}.$.lastUpdateTimestamp`]: new Date()
+      };
+
+      // Add subOption to the update object if it's provided (for forum route)
+      if (route === "forum" && subOption) {
+        updateObj[`${historyField}.$.subOption`] = subOption;
+      }
+
       const result = await db.collection("users").updateOne(
         { address: walletAddress, [`${historyField}.sessionId`]: sessionId },
-        { 
-          $set: { 
-            [`${historyField}.$.messages`]: messages,
-            [`${historyField}.$.lastUpdateTimestamp`]: new Date()
-          }
-        },
+        { $set: updateObj }
       );
 
       if (result.modifiedCount === 0) {
@@ -46,6 +51,11 @@ export async function POST(request) {
         startTimestamp: new Date(),
         lastUpdateTimestamp: new Date(),
       };
+
+      // Add subOption to the new session if it's provided (for forum route)
+      if (route === "forum" && subOption) {
+        newSession.subOption = subOption;
+      }
 
       const result = await db.collection("users").updateOne(
         { address: walletAddress },
