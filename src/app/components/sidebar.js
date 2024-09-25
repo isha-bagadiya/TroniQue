@@ -6,12 +6,13 @@ import { FaCaretDown } from "react-icons/fa";
 
 import Image from "../../../node_modules/next/image";
 import logo from "../../../public/TroniQue.svg";
+import logo2 from "../../../public/logo2.svg";
+
 import { useEffect, useState } from "react";
 import { useCredits } from "./CreditsContext";
 import ChatHistoryList from "./ChatHistoryList";
-import { useWallet } from '@tronweb3/tronwallet-adapter-react-hooks';
+import { useWallet } from "@tronweb3/tronwallet-adapter-react-hooks";
 import { useChatState } from "./ChatStateManager";
-import { WalletActionButton } from "@tronweb3/tronwallet-adapter-react-ui";
 
 export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -98,24 +99,24 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   return (
     <div className="h-full flex flex-col p-4">
       <div className="flex justify-center items-center">
-        <Link href="/">
+        {/* <Link href="/">
           <Image
             src={logo}
             alt="logo"
             className={`${isOpen ? "w-[120px] h-auto" : "hidden"}`}
           ></Image>
-        </Link>
+        </Link> */}
 
         <div
           className={`${
             isOpen
-              ? "flex flex-row-reverse justify-center ml-auto"
+              ? "flex flex-row-reverse gap-5 justify-center ml-auto"
               : "flex flex-col justify-center items-center"
           }`}
         >
           <button
             onClick={toggleSidebar}
-            className="transition m-4 hover:-translate-y-1 hover:scale-110 duration-300"
+            className="transition m-1 hover:-translate-y-1 hover:scale-110 duration-300"
           >
             {isOpen ? (
               <MdOutlineMenuOpen className="text-white text-3xl" />
@@ -123,7 +124,10 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
               <MdOutlineMenu className="text-white text-3xl" />
             )}
           </button>
-          <button className="my-5 transition hover:-translate-y-1 hover:scale-110 duration-300" onClick={handleNewChat}>
+          <button
+            className="my-5 transition hover:-translate-y-1 hover:scale-110 duration-300"
+            onClick={handleNewChat}
+          >
             <RiChatNewFill className="text-white rounded-lg text-3xl text-center" />
           </button>
         </div>
@@ -133,7 +137,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
         <button
           className={`${
             isOpen ? "w-full px-4" : "w-max mx-auto px-2"
-          } relative flex items-center justify-between my-3 rounded-md border border-gray-500 bg-transparent hover:bg-gray-900  py-2 text-sm font-medium`}
+          } relative flex items-center justify-between my-3 rounded-md border border-gray-500 bg-gradient-to-tl from-[#DE082D] to-[#FB5C78] hover:bg-gradient-to-tr hover:from-[#FB5C78] hover:to-[#DE082D] py-2 text-sm font-medium`}
           onClick={toggleDropdown}
         >
           {isOpen && (selectedOption || "Select Option")} <FaCaretDown />
@@ -145,12 +149,12 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
               isOpen
                 ? "w-full bg-transparent"
                 : "absolute w-max left-8 bg-black"
-            } my-1 flex flex-col gap-2 rounded-md border border-gray-500 text-nowrap overflow-hidden`}
+            } my-1 flex flex-col rounded-md border border-gray-500 text-nowrap overflow-hidden`}
           >
             <Link href="/forum">
               <button
                 onClick={() => handleOptionSelect("Forum Data")}
-                className="w-full px-6 py-2 text-sm hover:bg-gray-900"
+                className="w-full px-6 py-3 text-sm hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2]"
               >
                 Forum Data
               </button>
@@ -158,7 +162,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
             <Link href="/dex-trades">
               <button
                 onClick={() => handleOptionSelect("DexTrade Data")}
-                className="w-full px-6 py-2 text-sm hover:bg-gray-900"
+                className="w-full px-6 py-3 text-sm hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2]"
               >
                 DexTrade Data
               </button>
@@ -166,28 +170,48 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
           </div>
         )}
       </div>
-
-      <ChatHistoryList
-        history={chatHistory}
-        isOpen={isOpen}
-        onSelectChat={handleChatSelect}
-      />
+      <div className={`${isOpen? "" : "hidden"} ${showDropdown ? " h-[50vh] " : " h-[65vh] " } overflow-scroll`}>
+        <ChatHistoryList
+          history={chatHistory}
+          isOpen={isOpen}
+          onSelectChat={handleChatSelect}
+        />
+      </div>
 
       <div
-        className={`mt-auto mb-2 ${
-          isOpen ? "flex items-center gap-2 flex-row-reverse" : "text-center"
+        className={`mt-auto flex items-center justify-between gap-2 ${
+          isOpen ? "flex-row" : "flex-col-reverse"
         }`}
       >
-        <p className="text-sm font-medium">Credits</p>
-        <p className="font-bold text-lg">{credits}</p>
-      </div>
-      <div
-        className={`flex items-center ${
-          isOpen ? "justify-between" : "justify-center"
-        } p-2 border-t border-gray-700`}
-      >
-         <div className="w-full h-10 rounded-full flex items-center justify-center overflow-hidden">
-          <WalletActionButton />
+        <Link href="/">
+          <Image
+            src={logo}
+            alt="logo"
+            className={`${isOpen ? "w-[120px] h-auto" : "hidden"}`}
+          ></Image>
+        </Link>
+
+        <Link href="/">
+          <div
+            className={`${
+              isOpen ? "hidden" : "w-full h-max border-t border-t-gray-500 p-3"
+            }`}
+          >
+            <Image
+              src={logo2}
+              alt="logo"
+              className="w-[80%] h-auto mx-auto"
+            ></Image>
+          </div>
+        </Link>
+
+        <div
+          className={`mt-1 ${
+            isOpen ? "flex items-center gap-2 flex-row-reverse" : "text-center"
+          }`}
+        >
+          <p className="text-sm font-medium">Credits</p>
+          <p className="font-bold text-lg">{credits}</p>
         </div>
       </div>
     </div>

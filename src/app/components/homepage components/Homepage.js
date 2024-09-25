@@ -69,14 +69,13 @@ const Homepage = () => {
               analyze conversations to stay on top of the latest topics,
               community opinions, and key discussions.
             </p>
-            {/* {!isConnected && <GetStarted />} */}
-            {connected && (
+            {/* {connected && (
               <Link href="/forum">
                 <button className="px-6 py-2 rounded-full border border-white w-max mt-4">
                   Get Started
                 </button>
               </Link>
-            )}
+            )} */}
           </div>
           <div className="w-[33%] h-max">
             <Image
@@ -101,15 +100,14 @@ const Homepage = () => {
               energy usage, and analyze trade patterns to make informed
               decisions.
             </p>
-            {/* {!isConnected && <GetStarted />} */}
 
-            {connected && (
+            {/* {connected && (
               <Link href="/dex-trades">
                 <button className="px-6 py-2 rounded-full border border-white w-max mt-4">
                   Get Started
                 </button>
               </Link>
-            )}
+            )} */}
           </div>
           <div className="w-[33%] h-max">
             <Image
@@ -137,11 +135,11 @@ const Homepage = () => {
               knowledgeable guide right at your fingertips, making sure you get
               the precise data you need without the usual hassle.
             </p>
-            {connected && (
+            {/* {connected && (
               <button className="px-6 py-2 rounded-full border border-white w-max mt-4">
                 Get Started
               </button>
-            )}
+            )} */}
           </div>
           <div className="w-[33%] h-max">
             <Image

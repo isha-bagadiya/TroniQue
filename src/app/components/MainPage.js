@@ -145,12 +145,12 @@ const MainPage = ({ route }) => {
           <MessageHistory messages={messages} />
         )}
       </div>
-      <div className="flex items-center justify-between rounded-full bg-white w-full pl-5 pr-2 h-[45px] mb-3 absolute bottom-0">
+      <div className="flex items-center justify-between rounded-full border border-black bg-[#1c1919] w-full pl-5 pr-2 h-[50px] mb-3 absolute bottom-0">
         <input
           ref={inputRef}
           type="text"
           className={`w-full h-full bg-transparent border-none outline-none ${
-            message.trim() ? "text-black" : "text-[#848484]"
+            message.trim() ? "text-white" : "text-[#848484]"
           }`}
           placeholder={credits > 0 ? "Enter a prompt here" : "No credits left"}
           value={message}
@@ -162,12 +162,12 @@ const MainPage = ({ route }) => {
           disabled={disabled}
           className={`ml-2 p-2 rounded-full transition-colors ${
             disabled
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-blue-500 text-white hover:bg-blue-600"
+              ? "bg-gray-300 text-[#DE082D] cursor-not-allowed"
+              : "text-[#DE082D] bg-white"
           }`}
           onClick={handleSend}
         >
-          <BiSend size={20} />
+          <BiSend size={18} />
         </button>
       </div>
     </div>

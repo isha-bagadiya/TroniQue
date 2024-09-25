@@ -31,7 +31,7 @@ export const CreditsProvider = ({ children }) => {
   useEffect(() => {
     fetchCredits();
 
-    const intervalId = setInterval(fetchCredits, 3000);
+    const intervalId = setInterval(fetchCredits, 60000);
     return () => clearInterval(intervalId);
 
   }, [credits, fetchCredits]);

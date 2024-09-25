@@ -15,9 +15,9 @@ export default function DashboardLayout({ children }) {
 
   return (
     <ChatStateProvider>
-      <div className="min-h-screen flex">
+      <div className="min-h-screen flex font-regular-actay">
         <div
-          className={`bg-black transition-all duration-300 ease-in-out ${
+          className={`bg-[#1c1919] transition-all duration-300 ease-in-out ${
             isSidebarOpen ? "w-[20%]" : "w-[6%]"
           }`}
         >

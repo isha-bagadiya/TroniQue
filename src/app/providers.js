@@ -12,7 +12,7 @@ import '@tronweb3/tronwallet-adapter-react-ui/style.css';
 export function TronLinkProvider({ children }) {
 
   function onError() {
-    console.log(e);
+    // console.log(e);
   }
   const adapters = useMemo(function () {
     const tronLink1 = new TronLinkAdapter();
