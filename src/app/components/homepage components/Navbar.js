@@ -30,7 +30,7 @@ const Modal = ({ isOpen, onClose, children }) => {
 const Navbar = () => {
   const [isAddressSaved, setIsAddressSaved] = useState(false);
   const { address, connected } = useWallet();
-  const [isWalletInstalled, setIsWalletInstalled] = useState(true);
+  const [isWalletInstalled, setIsWalletInstalled] = useState();
   const [showInstallModal, setShowInstallModal] = useState(false);
 
   useEffect(() => {
@@ -89,6 +89,8 @@ const Navbar = () => {
       console.error("Error saving wallet address:", error);
     }
   };
+
+  console.log("is installeddddd", isWalletInstalled)
 
   return (
     <div className="w-[90%] mx-auto px-16 pt-20 py-8 flex items-center justify-between">
