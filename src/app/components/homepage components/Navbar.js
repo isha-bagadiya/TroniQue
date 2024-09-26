@@ -30,22 +30,25 @@ const Modal = ({ isOpen, onClose, children }) => {
 const Navbar = () => {
   const [isAddressSaved, setIsAddressSaved] = useState(false);
   const { address, connected } = useWallet();
-  const [isWalletInstalled, setIsWalletInstalled] = useState();
+  const [isWalletInstalled, setIsWalletInstalled] = useState(false);
   const [showInstallModal, setShowInstallModal] = useState(false);
 
-  const checkWalletAvailability = useCallback(() => {
-    if (typeof window !== "undefined" && window.tronLink) {
-      setIsWalletInstalled(true);
-      console.log("TronLink is installed");
-    } else {
-      setIsWalletInstalled(false);
-      console.log("TronLink is not installed");
-    }
-  }, []);
-
   useEffect(() => {
+    const checkWalletAvailability = () => {
+      if (typeof window !== "undefined" && window.tronLink) {
+        setIsWalletInstalled(true);
+      } else {
+        setIsWalletInstalled(false);
+      }
+    };
+
     checkWalletAvailability();
-  }, [checkWalletAvailability]);
+    const walletCheckInterval = setInterval(() => {
+      checkWalletAvailability();
+    }, 2000);
+
+    return () => clearInterval(walletCheckInterval);
+  }, []);
 
 
   const handleConnect = () => {
@@ -57,8 +60,8 @@ const Navbar = () => {
   };
 
   const handleInstalledClick = () => {
-    checkWalletAvailability();
     setShowInstallModal(false);
+    window.location.reload();
   };
 
   const handleLaterClick = () => {
