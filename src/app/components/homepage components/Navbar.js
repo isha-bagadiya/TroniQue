@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../../../../public/TroniQue.svg";
@@ -33,18 +33,20 @@ const Navbar = () => {
   const [isWalletInstalled, setIsWalletInstalled] = useState();
   const [showInstallModal, setShowInstallModal] = useState(false);
 
-  useEffect(() => {
-    const checkWalletAvailability = () => {
-      if (typeof window !== "undefined" && window.tronLink) {
-        setIsWalletInstalled(true);
-        console.log("checking for true")
-      } else {
-        setIsWalletInstalled(false);
-      }
-    };
-
-    checkWalletAvailability();
+  const checkWalletAvailability = useCallback(() => {
+    if (typeof window !== "undefined" && window.tronLink) {
+      setIsWalletInstalled(true);
+      console.log("TronLink is installed");
+    } else {
+      setIsWalletInstalled(false);
+      console.log("TronLink is not installed");
+    }
   }, []);
+
+  useEffect(() => {
+    checkWalletAvailability();
+  }, [checkWalletAvailability]);
+
 
   const handleConnect = () => {
     setShowInstallModal(true);
@@ -56,7 +58,10 @@ const Navbar = () => {
 
   const handleInstalledClick = () => {
     window.location.reload();
-  };
+    checkWalletAvailability();
+    setShowInstallModal(false);
+    // window.location.reload();
+   };
 
   const handleLaterClick = () => {
     setShowInstallModal(false);
@@ -91,7 +96,7 @@ const Navbar = () => {
     }
   };
 
-  console.log("is installeddddd", isWalletInstalled)
+  console.log("is installeddddd", isWalletInstalled);
 
   return (
     <div className="w-[90%] mx-auto px-16 pt-20 py-8 flex items-center justify-between">

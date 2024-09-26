@@ -26,7 +26,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   useEffect(() => {
     fetchCredits();
     handleSubOption(subOption);
-  }, [fetchCredits, subOption]);
+  }, [fetchCredits, handleSubOption, subOption]);
 
   useEffect(() => {
     if (selectedOption === "Forum Data") {
