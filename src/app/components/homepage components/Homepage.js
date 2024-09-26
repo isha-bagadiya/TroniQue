@@ -52,7 +52,7 @@ const Homepage = () => {
               src={img1}
               alt="img1"
               className="w-[75%] h-auto mx-auto"
-              loading="lazy"
+              priority
             ></Image>
           </div>
         </div>

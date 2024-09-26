@@ -57,11 +57,9 @@ const Navbar = () => {
   };
 
   const handleInstalledClick = () => {
-    window.location.reload();
     checkWalletAvailability();
     setShowInstallModal(false);
-    // window.location.reload();
-   };
+  };
 
   const handleLaterClick = () => {
     setShowInstallModal(false);
@@ -111,8 +109,8 @@ const Navbar = () => {
         >
           Install Wallet
         </button>
-      ) : !connected ? (
-        <WalletActionButton>Connect Wallet</WalletActionButton>
+      // ) : !connected ? (
+      //   <WalletActionButton>Connect Wallet</WalletActionButton>
       ) : (
         <WalletActionButton />
       )}
