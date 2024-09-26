@@ -54,11 +54,7 @@ const Navbar = () => {
   };
 
   const handleInstalledClick = () => {
-    if (isWalletInstalled) window.location.reload();
-    else
-      alert(
-        "Sorry! we are not able to find the wallet. Please try to install again or refresh the page."
-      );
+    window.location.reload();
   };
 
   const handleLaterClick = () => {
