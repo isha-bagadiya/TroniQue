@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { MdOutlineMenuOpen, MdOutlineMenu } from "react-icons/md";
 import { RiChatNewFill } from "react-icons/ri";
-import { FaArrowDown, FaCaretDown } from "react-icons/fa";
+import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 
 import Image from "../../../node_modules/next/image";
 import logo from "../../../public/TroniQue.svg";
@@ -20,7 +20,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const [chatHistory, setChatHistory] = useState([]);
   const { address } = useWallet(); // Get wallet address from Wagmi
   const { handleSelectChat, handleSubOption } = useChatState();
-  const [showForum, setShowForum] = useState(false);
+  const [showForum, setShowForum] = useState(true);
   const [subOption, setSubOption] = useState("Topic");
 
   useEffect(() => {
@@ -108,6 +108,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
 
   const handleSubOptionSelect = (option) => {
     setSubOption(option);
+    setSelectedOption("Forum Data")
     handleSubOption(option);
     toggleDropdown();
   };
@@ -148,7 +149,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
           } relative flex items-center justify-between my-3 rounded-md border border-gray-500 bg-gradient-to-tl from-[#DE082D] to-[#FB5C78] hover:bg-gradient-to-tr hover:from-[#FB5C78] hover:to-[#DE082D] py-2 text-sm font-medium`}
           onClick={toggleDropdown}
         >
-          {isOpen && (selectedOption || "Select Option")} <FaCaretDown />
+          {isOpen && (selectedOption || "Select Option")} {showDropdown ? <FaCaretUp /> : <FaCaretDown />}
         </button>
 
         {showDropdown && (
@@ -164,7 +165,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
                 onClick={() => handleOptionSelect("Forum Data")}
                 className="w-full px-2 py-[10px] rounded-md text-left text-sm hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] flex items-center justify-between"
               >
-                Forum Data <FaCaretDown className="ml-auto" />
+                Forum Data {showForum ? <FaCaretUp className="ml-auto" /> : <FaCaretDown className="ml-auto" /> } 
               </button>
             </Link>
 

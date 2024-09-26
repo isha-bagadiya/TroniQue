@@ -72,10 +72,8 @@ body {
   background: linear-gradient(258.36deg, #a71830cb 0.27%, #fe002fc1 71.56%);
 }
 
-/* .adapter-dropdown-collapse{
-  position: absolute;
-  bottom: 0 !important;
-  overflow: visible !important;
-  height: 0px !important;
-} */
+.adapter-dropdown-list-item:nth-child(2) {
+  display: none !important;
+}
+
 
