@@ -23,11 +23,17 @@ const Navbar = () => {
     };
 
     checkWalletAvailability();
+    const walletCheckInterval = setInterval(() => {
+      checkWalletAvailability();
+    }, 2000);
+
+    return () => clearInterval(walletCheckInterval);
   }, []);
 
   const handleConnect = () => {
     if (!isWalletInstalled) {
       window.open("https://www.tronlink.org/", "_blank");
+      // window.location.reload();
     }
   };
 
