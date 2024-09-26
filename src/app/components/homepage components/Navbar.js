@@ -37,6 +37,7 @@ const Navbar = () => {
     const checkWalletAvailability = () => {
       if (typeof window !== "undefined" && window.tronLink) {
         setIsWalletInstalled(true);
+        console.log("checking for true")
       } else {
         setIsWalletInstalled(false);
       }
