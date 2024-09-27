@@ -10,6 +10,7 @@ import logo2 from "../../../public/logo2.svg";
 import { useEffect, useState } from "react";
 import { useCredits } from "./CreditsContext";
 import ChatHistoryList from "./ChatHistoryList";
+import ChatHistoryListSkeleton from "./skeletons/ChatHistoryListSkeleton"
 import { useWallet } from "@tronweb3/tronwallet-adapter-react-hooks";
 import { useChatState } from "./ChatStateManager";
 
@@ -22,6 +23,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const { handleSelectChat, handleSubOption } = useChatState();
   const [showForum, setShowForum] = useState(true);
   const [subOption, setSubOption] = useState("Topic");
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
 
   useEffect(() => {
     fetchCredits();
@@ -54,9 +56,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
         `/api/get-chat-history?walletAddress=${encodeURIComponent(
           address
         )}&option=${encodeURIComponent(option)}${
-          subOption
-            ? `&subOption=${encodeURIComponent(subOption)}`
-            : ""
+          subOption ? `&subOption=${encodeURIComponent(subOption)}` : ""
         }`
       );
 
@@ -75,6 +75,8 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
       }
     } catch (error) {
       console.error(`Error fetching ${option} chat history:`, error);
+    } finally {
+      setIsLoadingHistory(false);
     }
   };
 
@@ -108,9 +110,16 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
 
   const handleSubOptionSelect = (option) => {
     setSubOption(option);
-    setSelectedOption("Forum Data")
+    setSelectedOption("Forum Data");
     handleSubOption(option);
     toggleDropdown();
+  };
+
+  const displaySelectedOption = () => {
+    if (selectedOption === "Forum Data") {
+      return `Forum Data (${subOption})`;
+    }
+    return selectedOption || "Select Option";
   };
 
   return (
@@ -149,7 +158,8 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
           } relative flex items-center justify-between my-3 rounded-md border border-gray-500 bg-gradient-to-tl from-[#DE082D] to-[#FB5C78] hover:bg-gradient-to-tr hover:from-[#FB5C78] hover:to-[#DE082D] py-2 text-sm font-medium`}
           onClick={toggleDropdown}
         >
-          {isOpen && (selectedOption || "Select Option")} {showDropdown ? <FaCaretUp /> : <FaCaretDown />}
+          {isOpen && displaySelectedOption()}{" "}
+          {showDropdown ? <FaCaretUp /> : <FaCaretDown />}
         </button>
 
         {showDropdown && (
@@ -165,7 +175,12 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
                 onClick={() => handleOptionSelect("Forum Data")}
                 className="w-full px-2 py-[10px] rounded-md text-left text-sm hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] flex items-center justify-between"
               >
-                Forum Data {showForum ? <FaCaretUp className="ml-auto" /> : <FaCaretDown className="ml-auto" /> } 
+                Forum Data{" "}
+                {showForum ? (
+                  <FaCaretUp className="ml-auto" />
+                ) : (
+                  <FaCaretDown className="ml-auto" />
+                )}
               </button>
             </Link>
 
@@ -204,11 +219,15 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
           showDropdown ? " h-[52vh] " : " h-[67vh] "
         } overflow-scroll`}
       >
-        <ChatHistoryList
-          history={chatHistory}
-          isOpen={isOpen}
-          onSelectChat={handleChatSelect}
-        />
+       {isLoadingHistory ? (
+          <ChatHistoryListSkeleton />
+        ) : (
+          <ChatHistoryList
+            history={chatHistory}
+            isOpen={isOpen}
+            onSelectChat={handleChatSelect}
+          />
+        )}
       </div>
 
       <div
