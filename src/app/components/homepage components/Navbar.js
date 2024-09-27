@@ -112,8 +112,8 @@ const Navbar = () => {
         >
           Install Wallet
         </button>
-      // ) : !connected ? (
-      //   <WalletActionButton>Connect Wallet</WalletActionButton>
+      ) : !connected ? (
+        <WalletActionButton>Connect Wallet</WalletActionButton>
       ) : (
         <WalletActionButton />
       )}
