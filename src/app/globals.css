@@ -60,6 +60,10 @@ body {
   background: linear-gradient(90.36deg, #DE082D 0.27%, #FB5C78 71.56%);
 }
 
+.adapter-react-button:hover {
+  background: linear-gradient(199deg, #DE082D 0.27%, #FB5C78 71.56%);
+}
+
 .button-icon {
   display: none !important;
   width: 0px !important;
