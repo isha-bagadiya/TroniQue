@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import ReactMarkdown from 'react-markdown';
 
 const MessageHistory = ({ messages }) => {
   const messagesEndRef = useRef(null);
@@ -11,7 +12,7 @@ const MessageHistory = ({ messages }) => {
   }, [messages]);
 
   return (
-    <div className="w-full h-full p-4 space-y-4">
+    <div className="w-full h-full p-4 space-y-4 font-sans">
       {messages.map((message, index) => (
         <div
           key={index}
@@ -26,7 +27,9 @@ const MessageHistory = ({ messages }) => {
                 : "bg-gray-200 text-gray-800 rounded-bl-none"
             }`}
           >
-            <p className="text-sm">{message.content}</p>
+            <ReactMarkdown className="text-sm break-words">
+              {message.content}
+            </ReactMarkdown>
           </div>
         </div>
       ))}

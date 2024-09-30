@@ -128,7 +128,8 @@ const MainPage = ({ route }) => {
         setTimeout(async () => {
           const aiMessage = {
             type: "ai",
-            content: "This is the AI generated answer",
+            // content: "This is the AI generated answer",
+            content: "The first three topics based on the number of likes are:\n\n1. **Unclaimed - Fall of Mankind** with 1161 likes.\n2. **BttTipBot - Tipping is mandatory sir** with 1127 likes.\n3. **Strongcoin - Be strong! Tap and earn** with 536 likes.",
           };
           const finalMessages = [...updatedMessages, aiMessage];
           setMessages(finalMessages);
@@ -137,8 +138,6 @@ const MainPage = ({ route }) => {
           await saveChatSession(finalMessages);
         }, 1000);
 
-        // setMessage("");
-        // setDisabled(true);
       } catch (error) {
         console.error("Error handling send:", error);
         setIsMessageSending(false);
