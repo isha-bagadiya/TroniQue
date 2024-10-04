@@ -3,7 +3,7 @@ import connectToDatabase from "../../utils/mongodb";
 import { ObjectId } from "mongodb";
 
 export async function POST(request) {
-  const { walletAddress, route, messages, sessionId, subOption } = await request.json();
+  const { walletAddress, route, messages, sessionId, subOption, subOption2 } = await request.json();
 
   if (!walletAddress || !route || !messages) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -23,8 +23,10 @@ export async function POST(request) {
       };
 
       // Add subOption to the update object if it's provided (for forum route)
-      if (route === "forum" && subOption) {
+      if (route === "forum" && subOption && subOption2) {
         updateObj[`${historyField}.$.subOption`] = subOption;
+        updateObj[`${historyField}.$.subOption2`] = subOption2;
+
       }
 
       const result = await db.collection("users").updateOne(
@@ -53,8 +55,10 @@ export async function POST(request) {
       };
 
       // Add subOption to the new session if it's provided (for forum route)
-      if (route === "forum" && subOption) {
+      if (route === "forum" && subOption && subOption2) {
         newSession.subOption = subOption;
+        newSession.subOption2 = subOption2;
+
       }
 
       const result = await db.collection("users").updateOne(

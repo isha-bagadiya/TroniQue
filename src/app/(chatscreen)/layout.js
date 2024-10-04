@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }) {
       <div className="min-h-screen flex font-regular-actay">
         <div
           className={`bg-[#1c1919] transition-all duration-300 ease-in-out ${
-            isSidebarOpen ? "w-[20%]" : "w-[6%]"
+            isSidebarOpen ? "xl:w-[20%] w-[310px]" : "xl:w-[6%] md:w-[90px] w-full"
           }`}
         >
           <Sidebar

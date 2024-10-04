@@ -18,7 +18,7 @@ const ChatHistoryList = ({ history, isOpen, onSelectChat }) => {
           <li key={chat._id}>
             <button
               onClick={() => onSelectChat(chat)}
-              className="w-full text-nowrap text-left text-white text-sm border-b border-b-[#4b22226c] border-t border-t-[#4b22226c] p-2 px-3 flex items-center gap-2"
+              className="w-full text-nowrap text-left text-white text-sm border-b border-b-[#4b22226c] border-t border-t-[#4b22226c] p-2 px-3 flex items-center gap-2 hover:bg-[#4b22226c]"
             >
               <HiChatBubbleLeftRight />
               <p className="w-[90%] overflow-hidden"> {isOpen ? `${getFirstUserMessage(chat)}` : index + 1}</p>

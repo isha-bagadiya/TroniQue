@@ -15,7 +15,7 @@ const MainPage = ({ route }) => {
   const [messages, setMessages] = useState([]);
   const { credits, deductCredit } = useCredits();
   const { address } = useWallet(); // Get wallet address from Wagmi
-  const { selectedSessionId, selectedSubOption } = useChatState();
+  const { selectedSessionId, selectedSubOption, selectedSubOption2 } = useChatState();
   const [sessionId, setSessionId] = useState(null);
   const inputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -98,6 +98,7 @@ const MainPage = ({ route }) => {
           messages: updatedMessages,
           sessionId,
           subOption: route === "forum" ? selectedSubOption : undefined,
+          subOption2: route === "forum" ? selectedSubOption2 : undefined,
         }),
       });
 
@@ -124,24 +125,71 @@ const MainPage = ({ route }) => {
         setMessage("");
         setDisabled(true);
 
-        // Simulate AI response
-        setTimeout(async () => {
+        console.log("Sending message to AI:", message);
+
+        const aiResponse = await generateAIResponse(message);
+        console.log("Received AI response:", aiResponse);
+
+        if (aiResponse) {
           const aiMessage = {
             type: "ai",
-            // content: "This is the AI generated answer",
-            content: "The first three topics based on the number of likes are:\n\n1. **Unclaimed - Fall of Mankind** with 1161 likes.\n2. **BttTipBot - Tipping is mandatory sir** with 1127 likes.\n3. **Strongcoin - Be strong! Tap and earn** with 536 likes.",
+            content: aiResponse,
           };
           const finalMessages = [...updatedMessages, aiMessage];
           setMessages(finalMessages);
-          setIsMessageSending(false);
-
           await saveChatSession(finalMessages);
-        }, 1000);
-
+        } else {
+          console.error("AI response is empty or undefined");
+          throw new Error("Empty AI response");
+        }
       } catch (error) {
-        console.error("Error handling send:", error);
+        console.error("Error in handleSend:", error);
+        const errorMessage = {
+          type: "error",
+          content:
+            "Sorry, I couldn't generate a response at this time. Please try again later.",
+        };
+        setMessages((prevMessages) => [...prevMessages, errorMessage]);
+      } finally {
         setIsMessageSending(false);
       }
+    }
+  };
+  const generateAIResponse = async (userMessage) => {
+    try {
+      const response = await fetch("http://127.0.0.1:5000/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          question: userMessage,
+          openai_api_key: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+          data: "topics",
+        }),
+      });
+
+      console.log("API response status:", response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("API error response:", errorText);
+        throw new Error(
+          `Failed to generate AI response: ${response.status} ${response.statusText}`
+        );
+      }
+
+      const data = await response.json();
+      console.log("API response data:", data);
+
+      if (!data.answer) {
+        throw new Error("API response is missing the 'answer' field");
+      }
+
+      return data.answer;
+    } catch (error) {
+      console.error("Error in generateAIResponse:", error);
+      throw error;
     }
   };
 

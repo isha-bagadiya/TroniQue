@@ -10,7 +10,7 @@ import logo2 from "../../../public/logo2.svg";
 import { useEffect, useState } from "react";
 import { useCredits } from "./CreditsContext";
 import ChatHistoryList from "./ChatHistoryList";
-import ChatHistoryListSkeleton from "./skeletons/ChatHistoryListSkeleton"
+import ChatHistoryListSkeleton from "./skeletons/ChatHistoryListSkeleton";
 import { useWallet } from "@tronweb3/tronwallet-adapter-react-hooks";
 import { useChatState } from "./ChatStateManager";
 
@@ -20,15 +20,21 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const { credits, fetchCredits } = useCredits();
   const [chatHistory, setChatHistory] = useState([]);
   const { address } = useWallet(); // Get wallet address from Wagmi
-  const { handleSelectChat, handleSubOption } = useChatState();
+  const { handleSelectChat, handleSubOption, handleSubOption2 } =
+    useChatState();
   const [showForum, setShowForum] = useState(true);
-  const [subOption, setSubOption] = useState("Topic");
+  const [showSubOption, setShowSubOption] = useState(false);
+
+  const [subOption, setSubOption] = useState("Hackathon");
+  const [subOption2, setSubOption2] = useState("Topics");
+
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
 
   useEffect(() => {
     fetchCredits();
     handleSubOption(subOption);
-  }, [fetchCredits, handleSubOption, subOption]);
+    handleSubOption2(subOption2);
+  }, [fetchCredits, handleSubOption, handleSubOption2, subOption2, subOption]);
 
   useEffect(() => {
     if (selectedOption === "Forum Data") {
@@ -86,6 +92,9 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const toggle = () => {
     setShowForum(!showForum);
   };
+  const toggle2 = () => {
+    setShowSubOption(!showSubOption);
+  };
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -112,12 +121,20 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
     setSubOption(option);
     setSelectedOption("Forum Data");
     handleSubOption(option);
+    // toggleDropdown();
+    toggle2();
+  };
+  const handleSubOption2Select = (subOption2, mainOption) => {
+    setSubOption2(subOption2);
+    setSubOption(mainOption);
+    handleSubOption2(subOption2);
+    handleSubOption(mainOption);
     toggleDropdown();
   };
 
   const displaySelectedOption = () => {
     if (selectedOption === "Forum Data") {
-      return `Forum Data (${subOption})`;
+      return `Forum Data (${subOption}_${subOption2})`;
     }
     return selectedOption || "Select Option";
   };
@@ -143,7 +160,9 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
             )}
           </button>
           <button
-            className="my-5 transition hover:-translate-y-1 hover:scale-110 duration-300"
+            className={`${
+              isOpen ? "" : "max-[768px]:hidden"
+            } my-5 transition hover:-translate-y-1 hover:scale-110 duration-300`}
             onClick={handleNewChat}
           >
             <RiChatNewFill className="text-white rounded-lg text-3xl text-center" />
@@ -151,7 +170,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
         </div>
       </div>
 
-      <div>
+      <div className={`${isOpen ? "" : "max-[768px]:hidden"}`}>
         <button
           className={`${
             isOpen ? "w-full px-4" : "w-max mx-auto px-2"
@@ -185,20 +204,55 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
             </Link>
 
             {showForum && (
-              <div className="flex justify-between my-1 px-2">
-                {["Topic", "User", "Post"].map((option) => (
-                  <button
-                    key={option}
-                    value={option}
-                    onClick={() => handleSubOptionSelect(option)}
-                    className={`w-[31.5%] px-2 py-2 border border-gray-500 text-xs rounded hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] ${
-                      subOption === option
-                        ? "bg-gradient-to-r from-[#DE082D] to-[#FB5C78]"
-                        : ""
-                    }`}
-                  >
-                    {option}
-                  </button>
+              <div className="flex flex-col gap-1 justify-between my-1 px-2">
+                {[
+                  "Hackathon",
+                  "Site Feedback",
+                  "APE NFT",
+                  "Chitchat",
+                  "Discussion",
+                  "Dev Talks",
+                ].map((option) => (
+                  <div key={option} className="w-[95%] mx-auto flex flex-col">
+                    <button
+                      value={option}
+                      onClick={() => handleSubOptionSelect(option)}
+                      className={`flex items-center justify-between  px-2 py-2 border border-gray-500 text-xs rounded hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] ${
+                        subOption === option
+                          ? "bg-gradient-to-r from-[#DE082D] to-[#FB5C78]"
+                          : ""
+                      }`}
+                    >
+                      {option}
+                      {subOption === option ? (
+                        <FaCaretUp className="ml-auto" />
+                      ) : (
+                        <FaCaretDown className="ml-auto" />
+                      )}
+                    </button>
+                    {subOption === option && (
+                      <div className="flex justify-between my-1 px-2">
+                        {["Topics", "Users", "Posts"].map(
+                          (subOption2Option) => (
+                            <button
+                              key={subOption2Option}
+                              value={subOption2Option}
+                              onClick={() =>
+                                handleSubOption2Select(subOption2Option, option)
+                              }
+                              className={`w-[31.5%] px-2 py-2 border border-gray-500 text-xs rounded hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] ${
+                                subOption2 === subOption2Option
+                                  ? "bg-gradient-to-r from-[#DE082D] to-[#FB5C78]"
+                                  : ""
+                              }`}
+                            >
+                              {subOption2Option}
+                            </button>
+                          )
+                        )}
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
             )}
@@ -216,10 +270,10 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
       </div>
       <div
         className={`${isOpen ? "" : "hidden"} ${
-          showDropdown ? " h-[52vh] " : " h-[67vh] "
+          showDropdown ? " h-[10vh] " : " h-[67vh] "
         } overflow-scroll`}
       >
-       {isLoadingHistory ? (
+        {isLoadingHistory ? (
           <ChatHistoryListSkeleton />
         ) : (
           <ChatHistoryList
@@ -232,7 +286,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
 
       <div
         className={`mt-auto flex items-center justify-between gap-2 ${
-          isOpen ? "flex-row" : "flex-col-reverse"
+          isOpen ? "flex-row" : "flex-col-reverse max-[768px]:hidden"
         }`}
       >
         <Link href="/">

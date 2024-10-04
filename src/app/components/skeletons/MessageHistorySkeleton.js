@@ -17,8 +17,8 @@ const MessageHistorySkeleton = () => {
                 : "bg-gray-100 rounded-bl-none opacity-5"
             }`}
           >
-            <div className="h-2 bg-gray-300 rounded animate-pulse w-[200px]"></div>
-            <div className="h-2 bg-gray-300 rounded animate-pulse mt-2 w-[200px]"></div>
+            <div className="h-2 bg-gray-300 rounded animate-pulse w-[310px]"></div>
+            <div className="h-2 bg-gray-300 rounded animate-pulse mt-2 w-[310px]"></div>
           </div>
         </div>
       ))}

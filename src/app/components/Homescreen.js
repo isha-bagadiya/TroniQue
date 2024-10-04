@@ -31,7 +31,7 @@ const Homescreen = ({ route, onQuestionClick }) => {
         {questions.map((question, index) => (
           <div
             key={index}
-            className="overflow-hidden rounded-lg p-[1px] flex flex-col justify-start items-center w-[220px] h-[160px] bg-gradient-to-l from-[#FCD8D8] to-[#FB5C78]"
+            className="overflow-hidden rounded-lg p-[1px] flex flex-col justify-start items-center w-[220px] h-[160px] bg-gradient-to-l hover:bg-gradient-to-tl from-[#FCD8D8] to-[#FB5C78]"
             onClick={() => onQuestionClick(question)}
           >
             <div className="bg-[#121212] rounded-lg w-full h-full">

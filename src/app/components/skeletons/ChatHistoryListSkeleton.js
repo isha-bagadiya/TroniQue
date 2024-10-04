@@ -1,6 +1,6 @@
 import React from "react";
 
-const ChatHistoryListSkeleton = ({ count = 7 }) => {
+const ChatHistoryListSkeleton = ({ count = 12 }) => {
   return (
     <div className="my-4 px-2">
       <ul className="space-y-2">
