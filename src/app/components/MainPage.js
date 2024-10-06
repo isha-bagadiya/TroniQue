@@ -15,12 +15,21 @@ const MainPage = ({ route }) => {
   const [messages, setMessages] = useState([]);
   const { credits, deductCredit } = useCredits();
   const { address } = useWallet(); // Get wallet address from Wagmi
-  const { selectedSessionId, selectedSubOption, selectedSubOption2 } = useChatState();
+  const { selectedSessionId, selectedSubOption, selectedSubOption2 } =
+    useChatState();
   const [sessionId, setSessionId] = useState(null);
   const inputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isMessageSending, setIsMessageSending] = useState(false);
   const messagesEndRef = useRef(null);
+
+
+  useEffect(() => {
+    if (route === "forum") {
+      setMessages([]); // Reset messages when subfields change
+      setSessionId(null); // Reset the session ID
+    }
+  }, [selectedSubOption, selectedSubOption2, route]);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -207,7 +216,15 @@ const MainPage = ({ route }) => {
         {isLoading ? (
           <MessageHistorySkeleton />
         ) : messages?.length === 0 ? (
-          <Homescreen route={route} onQuestionClick={handleQuestionClick} />
+          <Homescreen
+            route={route}
+            onQuestionClick={handleQuestionClick}
+            selectedSubfield={
+              route === "forum"
+                ? `${selectedSubOption} ${selectedSubOption2}`.trim()
+                : undefined
+            }
+          />
         ) : (
           <>
             <MessageHistory messages={messages} />

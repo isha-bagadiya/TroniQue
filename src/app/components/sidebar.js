@@ -22,13 +22,15 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const { address } = useWallet(); // Get wallet address from Wagmi
   const { handleSelectChat, handleSubOption, handleSubOption2 } =
     useChatState();
-  const [showForum, setShowForum] = useState(true);
+  const [showForum, setShowForum] = useState(false);
   const [showSubOption, setShowSubOption] = useState(false);
 
   const [subOption, setSubOption] = useState("Hackathon");
   const [subOption2, setSubOption2] = useState("Topics");
 
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
+
+  
 
   useEffect(() => {
     fetchCredits();
@@ -121,8 +123,8 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
     setSubOption(option);
     setSelectedOption("Forum Data");
     handleSubOption(option);
-    // toggleDropdown();
     toggle2();
+    toggle()
   };
   const handleSubOption2Select = (subOption2, mainOption) => {
     setSubOption2(subOption2);
@@ -130,11 +132,13 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
     handleSubOption2(subOption2);
     handleSubOption(mainOption);
     toggleDropdown();
+    toggle();
+    toggle2();
   };
 
   const displaySelectedOption = () => {
     if (selectedOption === "Forum Data") {
-      return `Forum Data (${subOption}_${subOption2})`;
+      return `Forum Data (${subOption} ${subOption2})`;
     }
     return selectedOption || "Select Option";
   };
@@ -192,7 +196,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
             <Link href="/forum">
               <button
                 onClick={() => handleOptionSelect("Forum Data")}
-                className="w-full px-2 py-[10px] rounded-md text-left text-sm hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] flex items-center justify-between"
+                className="w-full px-2 py-[10px] hover:rounded-md text-left text-sm hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] flex items-center justify-between"
               >
                 Forum Data{" "}
                 {showForum ? (
@@ -204,7 +208,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
             </Link>
 
             {showForum && (
-              <div className="flex flex-col gap-1 justify-between my-1 px-2">
+              <div className="flex flex-col gap-1 justify-between my-1 px-2 py-1 bg-[#121212]">
                 {[
                   "Hackathon",
                   "Site Feedback",
@@ -217,7 +221,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
                     <button
                       value={option}
                       onClick={() => handleSubOptionSelect(option)}
-                      className={`flex items-center justify-between  px-2 py-2 border border-gray-500 text-xs rounded hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] ${
+                      className={`flex items-center justify-between  px-2 py-2 text-xs rounded hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] ${
                         subOption === option
                           ? "bg-gradient-to-r from-[#DE082D] to-[#FB5C78]"
                           : ""
@@ -260,7 +264,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
             <Link href="/dex-trades">
               <button
                 onClick={() => handleOptionSelect("DexTrade Data")}
-                className="w-full text-left px-2 py-[10px] rounded-md text-sm hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2]"
+                className="w-full border-t border-t-gray-500 text-left px-2 py-[10px] hover:rounded-md text-sm hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2]"
               >
                 DexTrade Data
               </button>
@@ -270,8 +274,8 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
       </div>
       <div
         className={`${isOpen ? "" : "hidden"} ${
-          showDropdown ? " h-[10vh] " : " h-[67vh] "
-        } overflow-scroll`}
+          showDropdown ? " h-[53vh] " : " h-[67vh] "
+        } overflow-scroll ${showForum? "hidden":""}`}
       >
         {isLoadingHistory ? (
           <ChatHistoryListSkeleton />
