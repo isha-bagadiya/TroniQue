@@ -163,7 +163,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
 
   const displaySelectedOption = () => {
     if (selectedOption === "Forum Data") {
-      return `Forum Data (${subOption}_${subOption2})`;
+      return `Forum Data (${subOption} ${subOption2})`;
     } else if (selectedOption === "Contract Data") {
       return `${subOption}`;
     }
