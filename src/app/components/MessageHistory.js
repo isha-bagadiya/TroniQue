@@ -12,7 +12,6 @@ const MessageHistory = ({ messages }) => {
   const [viewMode, setViewMode] = useState({});
   const [chartLoading, setChartLoading] = useState({});
 
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -158,14 +157,20 @@ const MessageHistory = ({ messages }) => {
       enabled: true,
       shared: true,
       intersect: false,
-      custom: function({ series, seriesIndex, dataPointIndex, w }) {
+      custom: function ({ series, seriesIndex, dataPointIndex, w }) {
         const dataPoint = data[dataPointIndex];
+        const parseBoldMarkdown = (text) => {
+          return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        };
+
         return `
           <div class="bg-gray-800 text-white rounded-md p-2 w-44">
-            <div class="font-semibold mb-1 break-words text-wrap">${dataPoint.name}</div>
-            <div class="break-words">Value: ${dataPoint.value}</div>
-          </div>
-        `;
+          <div class="font-semibold mb-1 break-words text-wrap">${parseBoldMarkdown(
+            dataPoint.name
+          )}</div>
+          <div class="break-words">Value: ${dataPoint.value}</div>
+        </div>
+      `;
       },
     },
     title: {
