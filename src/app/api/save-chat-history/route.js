@@ -13,7 +13,20 @@ export async function POST(request) {
   const db = client.db("Tronique");
 
   try {
-    const historyField = route === "dextrades" ? "dexTradeHistory" : "forumHistory";
+    let historyField;
+    switch (route) {
+      case "dextrades":
+        historyField = "dexTradeHistory";
+        break;
+      case "forum":
+        historyField = "forumHistory";
+        break;
+      case "contract":
+        historyField = "contractHistory";
+        break;
+      default:
+        return NextResponse.json({ error: "Invalid route" }, { status: 400 });
+    }
 
     if (sessionId) {
       // Update existing session
@@ -22,11 +35,12 @@ export async function POST(request) {
         [`${historyField}.$.lastUpdateTimestamp`]: new Date()
       };
 
-      // Add subOption to the update object if it's provided (for forum route)
-      if (route === "forum" && subOption && subOption2) {
+      // Add subOption to the update object if it's provided (for forum and contract routes)
+      if ((route === "forum" || route === "contract") && subOption) {
         updateObj[`${historyField}.$.subOption`] = subOption;
-        updateObj[`${historyField}.$.subOption2`] = subOption2;
-
+        if (route === "forum" && subOption2) {
+          updateObj[`${historyField}.$.subOption2`] = subOption2;
+        }
       }
 
       const result = await db.collection("users").updateOne(
@@ -54,11 +68,12 @@ export async function POST(request) {
         lastUpdateTimestamp: new Date(),
       };
 
-      // Add subOption to the new session if it's provided (for forum route)
-      if (route === "forum" && subOption && subOption2) {
+      // Add subOption to the new session if it's provided (for forum and contract routes)
+      if ((route === "forum" || route === "contract") && subOption) {
         newSession.subOption = subOption;
-        newSession.subOption2 = subOption2;
-
+        if (route === "forum" && subOption2) {
+          newSession.subOption2 = subOption2;
+        }
       }
 
       const result = await db.collection("users").updateOne(

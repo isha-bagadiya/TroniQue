@@ -46,9 +46,15 @@ export async function GET(request) {
       }
     } else if (option === "dextrades") {
       history = [...(user.dexTradeHistory || [])];
+    } else if (option === "contract") {
+      history = [...(user.contractHistory || [])];
+      if (subOption) {
+        history = history.filter((item) => item.subOption === subOption);
+      }
     } else {
       return NextResponse.json({ error: "Invalid option" }, { status: 400 });
     }
+
 
     history.sort(
       (a, b) => new Date(b.startTimestamp) - new Date(a.startTimestamp)

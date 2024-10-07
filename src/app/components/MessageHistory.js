@@ -10,6 +10,8 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 const MessageHistory = ({ messages }) => {
   const messagesEndRef = useRef(null);
   const [viewMode, setViewMode] = useState({});
+  const [chartLoading, setChartLoading] = useState({});
+
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -24,35 +26,20 @@ const MessageHistory = ({ messages }) => {
       ...prev,
       [index]: prev[index] === "analytics" ? "content" : "analytics",
     }));
+    if (!chartLoading[index]) {
+      setChartLoading((prev) => ({ ...prev, [index]: true }));
+      // Simulate loading time
+      setTimeout(() => {
+        setChartLoading((prev) => ({ ...prev, [index]: false }));
+      }, 1000);
+    }
   };
 
-  // const parseData = (content) => {
-  //   const lines = content.split("\n");
-
-  //   const parsedData = lines
-  //     .filter((line) => line.trim() !== "" && line.includes("-")) // Filter non-empty lines with '-'
-  //     .map((line) => {
-  //       // Find the last dash (-) in the line
-  //       const lastDashIndex = line.lastIndexOf("-");
-
-  //       // Split the line at the last dash
-  //       let name = line.slice(0, lastDashIndex).trim();
-  //       let value = line.slice(lastDashIndex + 1).trim(); // The value part after the last dash
-
-  //       // Ensure value is valid and extract numeric value
-  //       name = name.replace(/^\d+\.\s*/, "").trim(); // Remove leading numbers from name
-  //       value = parseFloat(value.replace(/[^\d.]/g, "")) || 0; // Extract numeric value from value part
-
-  //       console.log({ name, value });
-  //       return { name, value };
-  //     });
-
-  //   // Check if any item has a value greater than 0
-  //   const hasValidValue = parsedData.some((item) => item.value > 0);
-
-  //   // If no valid value, return null
-  //   return hasValidValue ? parsedData : null;
-  // };
+  const ChartLoader = () => (
+    <div className="flex justify-center items-center h-[300px] bg-white">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#DE082D]"></div>
+    </div>
+  );
 
   const parseData = (content) => {
     const lines = content.split("\n");
@@ -69,36 +56,20 @@ const MessageHistory = ({ messages }) => {
         const colonIndex = line.lastIndexOf(":");
         const dashIndex = line.lastIndexOf("-");
 
-        // Check if the line contains both ':' and '-'
-        if (colonIndex !== -1 && dashIndex !== -1) {
-          // If ':' comes before '-', slice between them
-          if (colonIndex < dashIndex) {
-            name = line.slice(colonIndex + 1, dashIndex).trim();
-            value = line.slice(dashIndex + 1).trim();
-          } else {
-            // If '-' comes before ':', use the dash as separator
-            name = line.slice(0, dashIndex).trim();
-            value = line.slice(dashIndex + 1).trim();
-          }
-        } else if (dashIndex !== -1) {
-          // If only '-' is present
-          name = line.slice(0, dashIndex).trim();
-          value = line.slice(dashIndex + 1).trim();
-        } else if (colonIndex !== -1) {
-          // If only ':' is present
+        if (colonIndex > dashIndex) {
+          // Use colon as separator
           name = line.slice(0, colonIndex).trim();
           value = line.slice(colonIndex + 1).trim();
         } else {
-          // This case shouldn't occur due to the filter, but just in case
-          name = line.trim();
-          value = "0";
+          // Use dash as separator
+          name = line.slice(0, dashIndex).trim();
+          value = line.slice(dashIndex + 1).trim();
         }
 
         // Ensure value is valid and extract numeric value
         name = name.replace(/^\d+\.\s*/, "").trim(); // Remove leading numbers from name
         value = parseFloat(value.replace(/[^\d.]/g, "")) || 0; // Extract numeric value from value part
 
-        console.log({ name, value });
         return { name, value };
       });
 
@@ -109,92 +80,9 @@ const MessageHistory = ({ messages }) => {
     return hasValidValue ? parsedData : null;
   };
 
-  // const getChartOptions = (data) => ({
-  //   chart: {
-  //     type: "line",
-  //     height: 400,
-  //     toolbar: {
-  //       show: true,
-  //       offsetX: 0,
-  //       offsetY: 0,
-  //       tools: {
-  //         download: true,
-  //         selection: true,
-  //         zoom: true,
-  //         zoomin: true,
-  //         zoomout: true,
-  //         pan: true,
-  //         reset: true,
-  //       },
-  //       export: {
-  //         csv: {
-  //           filename: undefined,
-  //           columnDelimiter: ",",
-  //           headerCategory: "category",
-  //           headerValue: "value",
-  //           categoryFormatter(x) {
-  //             return new Date(x).toDateString();
-  //           },
-  //         },
-  //         svg: {
-  //           filename: undefined,
-  //         },
-  //         png: {
-  //           filename: undefined,
-  //         },
-  //       },
-  //       autoSelected: "zoom",
-  //     },
-  //   },
-  //   plotOptions: {
-  //     bar: {
-  //       horizontal: false,
-  //       columnWidth: "55%",
-  //       endingShape: "rounded",
-  //     },
-  //   },
-  //   dataLabels: {
-  //     enabled: true,
-  //   },
-  //   stroke: {
-  //     show: true,
-  //     width: 2,
-  //     colors: ["transparent"],
-  //   },
-  //   xaxis: {
-  //     categories: data.map((item) => item.name),
-  //     labels: {
-  //       rotate: -45,
-  //       trim: false,
-  //       style: {
-  //         fontSize: "12px",
-  //       },
-  //     },
-  //   },
-  //   yaxis: {
-  //     title: {
-  //       text: "Value",
-  //     },
-  //   },
-  //   fill: {
-  //     opacity: 1,
-  //   },
-  //   tooltip: {
-  //     y: {
-  //       formatter: function (val) {
-  //         return val;
-  //       },
-  //     },
-  //   },
-  //   title: {
-  //     text: "Message Analytics",
-  //     align: "left",
-  //   },
-  // });
-
   const getChartOptions = (data) => ({
     chart: {
-      type: "line",
+      type: "bar",
       height: 400,
       toolbar: {
         show: true,
@@ -244,7 +132,7 @@ const MessageHistory = ({ messages }) => {
       width: 2,
       colors: ["transparent"],
     },
-    colors: ['#DE082D'], 
+    colors: ["#DE082D"],
     xaxis: {
       categories: data.map((item) => item.name),
       labels: {
@@ -254,7 +142,7 @@ const MessageHistory = ({ messages }) => {
           fontSize: "10px",
         },
         formatter: function (value) {
-          return value.length > 5 ? value.substr(0, 5) + "..." : value;
+          return value.length > 5 ? value.substr(0, 6) + "..." : value;
         },
       },
     },
@@ -267,16 +155,19 @@ const MessageHistory = ({ messages }) => {
       opacity: 1,
     },
     tooltip: {
-    theme: 'dark',
-    y: {
-      formatter: function (val) {
-        return val;
+      enabled: true,
+      shared: true,
+      intersect: false,
+      custom: function({ series, seriesIndex, dataPointIndex, w }) {
+        const dataPoint = data[dataPointIndex];
+        return `
+          <div class="bg-gray-800 text-white rounded-md p-2 w-44">
+            <div class="font-semibold mb-1 break-words text-wrap">${dataPoint.name}</div>
+            <div class="break-words">Value: ${dataPoint.value}</div>
+          </div>
+        `;
       },
     },
-    x: {
-      
-    }
-  },
     title: {
       text: "Message Analytics",
       align: "left",

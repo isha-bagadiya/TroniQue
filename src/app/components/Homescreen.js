@@ -31,116 +31,88 @@ const Homescreen = ({ route, onQuestionClick, selectedSubfield }) => {
 
   const forumQuestions = {
     "Hackathon Topics": [
-      "question1 Hackathon Topics",
-      "question2 Hackathon Topics",
-      "question3 Hackathon Topics",
-      "question4 Hackathon Topics"
+      "Can you give me top 3 topics based on number of likes?",
+      "Can you give me top 5 topics based on the created date?",
+      "Can you give me top 3 topics based on the number of replies?",
+      "Can you give me the top 5 topics based on last posted date?",
     ],
     "Site Feedback Topics": [
       "question1 Site Feedback Topics",
       "question2 Site Feedback Topics",
       "question3 Site Feedback Topics",
-      "question4 Site Feedback Topics"
+      "question4 Site Feedback Topics",
     ],
-    "APE NFT Topics": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
-    ],
-    "Chitchat Topics": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
-    ],
-    "Discussion Topics": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
-    ],
-    "Dev Talks Topics": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
-    ],
+    "APE NFT Topics": ["question1", "question2", "question3", "question4"],
+    "Chitchat Topics": ["question1", "question2", "question3", "question4"],
+    "Discussion Topics": ["question1", "question2", "question3", "question4"],
+    "Dev Talks Topics": ["question1", "question2", "question3", "question4"],
     "Hackathon Users": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
+      "Can you give me the top 3 users based on their trust level ?",
+      "What is the trust level of trondao ?", 
+      "Can you give me the list of all the moderators ?", 
+      "Is trondao a moderator ?"
     ],
-    "Site Feedback Users": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
-    ],
-    "APE NFT Users": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
-    ],
-    "Chitchat Users": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
-    ],
-    "Discussion Users": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
-    ],
-    "Dev Talks Users": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
-    ],
+    "Site Feedback Users": ["question1", "question2", "question3", "question4"],
+    "APE NFT Users": ["question1", "question2", "question3", "question4"],
+    "Chitchat Users": ["question1", "question2", "question3", "question4"],
+    "Discussion Users": ["question1", "question2", "question3", "question4"],
+    "Dev Talks Users": ["question1", "question2", "question3", "question4"],
     "Hackathon Posts": [
-      "question1",
-      "question2",
-      "question3",
+      "Can you give me the top 3 posts based on created date ?", 
+      "Give me the top 3 posts based on number of replies.", 
+      "question 3", 
       "question4"
     ],
-    "Site Feedback Posts": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
+    "Site Feedback Posts": ["question1", "question2", "question3", "question4"],
+    "APE NFT Posts": ["question1", "question2", "question3", "question4"],
+    "Chitchat Posts": ["question1", "question2", "question3", "question4"],
+    "Discussion Posts": ["question1", "question2", "question3", "question4"],
+    "Dev Talks Posts": ["question1", "question2", "question3", "question4"],
+  };
+
+  const contractSubfields = [
+    "Contract Energy Statistics",
+    "Contract Call Statistics",
+    "Contract Data Statistics",
+    "Tokens",
+  ];
+
+  const contractQuestions = {
+   
+    "Contract Energy Statistics": [
+      "question1 Contract Energy Statistics",
+      "question2 Contract Energy Statistics",
+      "question3 Contract Energy Statistics",
+      "question4 Contract Energy Statistics",
     ],
-    "APE NFT Posts": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
+    "Contract Call Statistics": [
+      "question1 Contract Call Statistics",
+      "question2 Contract Call Statistics",
+      "question3 Contract Call Statistics",
+      "question4 Contract Call Statistics",
     ],
-    "Chitchat Posts": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
+    "Contract Data Statistics": [
+      "question1 Hackathon Topics",
+      "question2 Hackathon Topics",
+      "question3 Hackathon Topics",
+      "question4 Hackathon Topics",
     ],
-    "Discussion Posts": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
-    ],
-    "Dev Talks Posts": [
-      "question1",
-      "question2",
-      "question3",
-      "question4"
+    "Tokens": [
+      "question1 Hackathon Topics",
+      "question2 Hackathon Topics",
+      "question3 Hackathon Topics",
+      "question4 Hackathon Topics",
     ],
   };
 
-  const questions = route === "dextrades" ? dexTradesQuestions : (forumQuestions[selectedSubfield] || []);
+  const questions =
+  route === "dextrades"
+    ? dexTradesQuestions
+    : route === "forum"
+    ? forumQuestions[selectedSubfield] || []
+    : route === "contract"
+    ? contractQuestions[selectedSubfield] || []
+    : [];
 
   return (
     <div className="flex flex-col w-[80%] mx-auto items-center justify-center p-12">

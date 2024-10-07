@@ -23,14 +23,14 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const { handleSelectChat, handleSubOption, handleSubOption2 } =
     useChatState();
   const [showForum, setShowForum] = useState(false);
+  const [showContract, setShowContract] = useState(false);
+
   const [showSubOption, setShowSubOption] = useState(false);
 
   const [subOption, setSubOption] = useState("Hackathon");
   const [subOption2, setSubOption2] = useState("Topics");
 
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
-
-  
 
   useEffect(() => {
     fetchCredits();
@@ -43,14 +43,20 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
       fetchChatHistory("forum");
     } else if (selectedOption === "DexTrade Data") {
       fetchChatHistory("dextrades");
+    } else if (selectedOption === "Contract Data") {
+      fetchChatHistory("contract");
     }
   });
 
   useEffect(() => {
     if (currentPath === "/forum") {
       setSelectedOption("Forum Data");
+      setSubOption("Hackathon");
     } else if (currentPath === "/dex-trades") {
       setSelectedOption("DexTrade Data");
+    } else if (currentPath === "/contract") {
+      setSelectedOption("Contract Data");
+      setSubOption("Contract Energy Statistics");
     } else {
       setSelectedOption("Select Option");
     }
@@ -90,6 +96,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
+    setShowForum(false)
   };
   const toggle = () => {
     setShowForum(!showForum);
@@ -97,15 +104,26 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
   const toggle2 = () => {
     setShowSubOption(!showSubOption);
   };
+  const toggleContract = () => {
+    setShowContract(!showContract);
+  };
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     if (option === "Forum Data") {
       fetchChatHistory("forum");
       toggle();
+      setShowContract(false);
     } else if (option === "DexTrade Data") {
       fetchChatHistory("dextrades");
       toggleDropdown();
+      setShowContract(false);
+      setShowForum(false);
+    } else if (option === "Contract Data") {
+      fetchChatHistory("Contract");
+      setSubOption("Contract Energy Statistics");
+      toggleContract();
+      setShowForum(false);
     }
   };
 
@@ -119,13 +137,20 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
     window.location.reload();
   };
 
-  const handleSubOptionSelect = (option) => {
+  const handleSubOptionSelect = (option, dataType) => {
     setSubOption(option);
-    setSelectedOption("Forum Data");
-    handleSubOption(option);
+    if (dataType === "forum") {
+      setSelectedOption("Forum Data");
+      // toggle();
+      setShowSubOption(true);
+    } else if (dataType === "contract") {
+      setSelectedOption("Contract Data");
+      handleSubOption(option);
+      toggleContract();
+    }
     toggle2();
-    toggle()
   };
+
   const handleSubOption2Select = (subOption2, mainOption) => {
     setSubOption2(subOption2);
     setSubOption(mainOption);
@@ -138,7 +163,9 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
 
   const displaySelectedOption = () => {
     if (selectedOption === "Forum Data") {
-      return `Forum Data (${subOption} ${subOption2})`;
+      return `Forum Data (${subOption}_${subOption2})`;
+    } else if (selectedOption === "Contract Data") {
+      return `${subOption}`;
     }
     return selectedOption || "Select Option";
   };
@@ -220,7 +247,7 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
                   <div key={option} className="w-[95%] mx-auto flex flex-col">
                     <button
                       value={option}
-                      onClick={() => handleSubOptionSelect(option)}
+                      onClick={() => handleSubOptionSelect(option, "forum")}
                       className={`flex items-center justify-between  px-2 py-2 text-xs rounded hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] ${
                         subOption === option
                           ? "bg-gradient-to-r from-[#DE082D] to-[#FB5C78]"
@@ -269,13 +296,52 @@ export default function Sidebar({ isOpen, toggleSidebar, currentPath }) {
                 DexTrade Data
               </button>
             </Link>
+
+            <Link href="/contract">
+              <button
+                onClick={() => handleOptionSelect("Contract Data")}
+                className="w-full border-t border-t-gray-500 px-2 py-[10px] hover:rounded-md text-left text-sm hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] flex items-center justify-between"
+              >
+                Contract Data{" "}
+                {showContract ? (
+                  <FaCaretUp className="ml-auto" />
+                ) : (
+                  <FaCaretDown className="ml-auto" />
+                )}
+              </button>
+            </Link>
+
+            {showContract && (
+              <div className="flex flex-col gap-1 justify-between my-1 px-2 py-1 bg-[#121212]">
+                {[
+                  "Contract Energy Statistics",
+                  "Contract Call Statistics",
+                  "Contract Data Statistics",
+                  "Tokens",
+                ].map((option) => (
+                  <div key={option} className="w-[95%] mx-auto flex flex-col">
+                    <button
+                      value={option}
+                      onClick={() => handleSubOptionSelect(option, "contract")}
+                      className={`flex items-center justify-between  px-2 py-2 text-xs rounded hover:bg-gradient-to-r hover:from-[#de082cac] hover:to-[#fb5c79d2] ${
+                        subOption === option
+                          ? "bg-gradient-to-r from-[#DE082D] to-[#FB5C78]"
+                          : ""
+                      }`}
+                    >
+                      {option}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
       <div
         className={`${isOpen ? "" : "hidden"} ${
           showDropdown ? " h-[53vh] " : " h-[67vh] "
-        } overflow-scroll ${showForum? "hidden":""}`}
+        } overflow-scroll ${showForum || showContract ? "hidden" : ""}`}
       >
         {isLoadingHistory ? (
           <ChatHistoryListSkeleton />

@@ -2,58 +2,60 @@ import { NextResponse } from "next/server";
 import connectToDatabase from "../../utils/mongodb";
 
 export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const sessionId = searchParams.get("sessionId");
+  const walletAddress = searchParams.get("walletAddress");
+  const route = searchParams.get("route");
+
+  if (!sessionId || !walletAddress || !route) {
+    return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
+  }
+
+  const client = await connectToDatabase();
+  const db = client.db("Tronique");
+
   try {
-    const url = new URL(request.url);
-    const walletAddress = url.searchParams.get('walletAddress');
-    const route = url.searchParams.get('route');
-    const sessionId = url.searchParams.get('sessionId');
-
-    console.log(`Received request for walletAddress: ${walletAddress}, route: ${route}, sessionId: ${sessionId}`);
-
-    if (!walletAddress) {
-      return NextResponse.json({ error: "Missing wallet address" }, { status: 400 });
+    let historyField;
+    switch (route) {
+      case "forum":
+        historyField = "forumHistory";
+        break;
+      case "dextrades":
+        historyField = "dexTradeHistory";
+        break;
+      case "contract":
+        historyField = "contractHistory";
+        break;
+      default:
+        return NextResponse.json({ error: "Invalid route" }, { status: 400 });
     }
 
-    if (!route) {
-      return NextResponse.json({ error: "Missing route parameter" }, { status: 400 });
-    }
-
-    // Connect to the database
-    const client = await connectToDatabase();
-    const db = client.db("Tronique");
-
-    // Find the user document
-    const user = await db.collection("users").findOne({ address: walletAddress });
-
-    if (!user) {
-      console.log("User not found");
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    const historyField = route === 'dextrades' ? 'dexTradeHistory' : 'forumHistory';
-    
-    if (sessionId) {
-      // Find the specific session
-      const session = user[historyField]?.find(session => session.sessionId === sessionId);
-      
-      if (!session) {
-        return NextResponse.json({ error: "Session not found" }, { status: 404 });
+    const user = await db.collection("users").findOne(
+      { 
+        address: walletAddress,
+        [`${historyField}.sessionId`]: sessionId 
+      },
+      { 
+        projection: { 
+          [`${historyField}.$`]: 1 
+        } 
       }
+    );
 
-      return NextResponse.json({ 
-        sessionId: session.sessionId,
-        messages: session.messages
-      });
-    } else {
-      // Return all sessions for the route
-      const history = user[historyField] || [];
-      history.sort((a, b) => new Date(b.startTimestamp) - new Date(a.startTimestamp));
-
-      return NextResponse.json({ history: history });
+    if (!user || !user[historyField] || user[historyField].length === 0) {
+      return NextResponse.json({ error: "Chat session not found" }, { status: 404 });
     }
 
+    const session = user[historyField][0];
+
+    return NextResponse.json({
+      sessionId: session.sessionId,
+      messages: session.messages,
+      subOption: session.subOption,
+      subOption2: session.subOption2
+    });
   } catch (error) {
-    console.error("Error in GET /api/get-chat-history:", error);
-    return NextResponse.json({ error: "Internal Server Error", details: error.message }, { status: 500 });
+    console.error("Error retrieving chat session:", error);
+    return NextResponse.json({ error: "Failed to retrieve chat session" }, { status: 500 });
   }
 }

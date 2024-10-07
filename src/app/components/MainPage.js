@@ -23,9 +23,41 @@ const MainPage = ({ route }) => {
   const [isMessageSending, setIsMessageSending] = useState(false);
   const messagesEndRef = useRef(null);
 
+  const dataTypeMapping = {
+    "Hackathon": {
+      Topics: "hackathon_topics",
+      Users: "hackathon_users",
+      Posts: "hackathon_posts"
+    },
+    "Site Feedback": {
+      Topics: "sitefeedback_topics",
+      Users: "sitefeedback_users",
+      Posts: "sitefeedback_posts"
+    },
+    "APE NFT": {
+      Topics: "apenft_topics",
+      Users: "apenft_users",
+      Posts: "apenft_posts"
+    },
+    "Chitchat": {
+      Topics: "chitchat_topics",
+      Users: "chitchat_users",
+      Posts: "chitchat_posts"
+    },
+    "Discussion": {
+      Topics: "discussion_topics",
+      Users: "discussion_users",
+      Posts: "discussion_posts"
+    },
+    "Dev Talks": {
+      Topics: "devtalks_topics",
+      Users: "devtalks_users",
+      Posts: "devtalks_posts"
+    }
+  };
 
   useEffect(() => {
-    if (route === "forum") {
+    if (route === "forum" || route === "contract") {
       setMessages([]); // Reset messages when subfields change
       setSessionId(null); // Reset the session ID
     }
@@ -106,7 +138,7 @@ const MainPage = ({ route }) => {
           route,
           messages: updatedMessages,
           sessionId,
-          subOption: route === "forum" ? selectedSubOption : undefined,
+          subOption: route === "forum" || route === "contract" ? selectedSubOption : undefined,
           subOption2: route === "forum" ? selectedSubOption2 : undefined,
         }),
       });
@@ -166,7 +198,16 @@ const MainPage = ({ route }) => {
   };
   const generateAIResponse = async (userMessage) => {
     try {
-      const response = await fetch("http://127.0.0.1:5000/ask", {
+      let dataType; 
+      
+      if (route === "forum" && selectedSubOption && selectedSubOption2) {
+        dataType = dataTypeMapping[selectedSubOption]?.[selectedSubOption2] || "topics";
+      } else if (route === "contract" && selectedSubOption) {
+        // You can add specific logic for the contract route if needed
+        dataType = "topics"; // or any other default for contract route
+      }
+
+      const response = await fetch("https://tronique-api.onrender.com/ask", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -174,7 +215,7 @@ const MainPage = ({ route }) => {
         body: JSON.stringify({
           question: userMessage,
           openai_api_key: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-          data: "topics",
+          data_type: dataType,
         }),
       });
 
@@ -217,14 +258,16 @@ const MainPage = ({ route }) => {
           <MessageHistorySkeleton />
         ) : messages?.length === 0 ? (
           <Homescreen
-            route={route}
-            onQuestionClick={handleQuestionClick}
-            selectedSubfield={
-              route === "forum"
-                ? `${selectedSubOption} ${selectedSubOption2}`.trim()
-                : undefined
-            }
-          />
+          route={route}
+          onQuestionClick={handleQuestionClick}
+          selectedSubfield={
+            route === "forum"
+              ? `${selectedSubOption} ${selectedSubOption2}`.trim()
+              : route === "contract"
+              ? selectedSubOption
+              : undefined
+          }
+        />
         ) : (
           <>
             <MessageHistory messages={messages} />
