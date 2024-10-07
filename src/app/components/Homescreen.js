@@ -37,20 +37,40 @@ const Homescreen = ({ route, onQuestionClick, selectedSubfield }) => {
       "Can you give me the top 5 topics based on last posted date?",
     ],
     "Site Feedback Topics": [
-      "question1 Site Feedback Topics",
-      "question2 Site Feedback Topics",
-      "question3 Site Feedback Topics",
-      "question4 Site Feedback Topics",
+      "Can you give me top 3 topics based on number of likes?",
+      "Can you give me top 5 topics based on the created date?",
+      "Can you give me top 3 topics based on the number of replies?",
+      "Can you give me the top 5 topics based on last posted date?",
     ],
-    "APE NFT Topics": ["question1", "question2", "question3", "question4"],
-    "Chitchat Topics": ["question1", "question2", "question3", "question4"],
-    "Discussion Topics": ["question1", "question2", "question3", "question4"],
-    "Dev Talks Topics": ["question1", "question2", "question3", "question4"],
+    "APE NFT Topics": [
+      "Can you give me top 3 topics based on number of likes?",
+      "Can you give me top 5 topics based on the created date?",
+      "Can you give me top 3 topics based on the number of replies?",
+      "Can you give me the top 5 topics based on last posted date?",
+    ],
+    "Chitchat Topics": [
+      "Can you give me top 3 topics based on number of likes?",
+      "Can you give me top 5 topics based on the created date?",
+      "Can you give me top 3 topics based on the number of replies?",
+      "Can you give me the top 5 topics based on last posted date?",
+    ],
+    "Discussion Topics": [
+      "Can you give me top 3 topics based on number of likes?",
+      "Can you give me top 5 topics based on the created date?",
+      "Can you give me top 3 topics based on the number of replies?",
+      "Can you give me the top 5 topics based on last posted date?",
+    ],
+    "Dev Talks Topics": [
+      "Can you give me top 3 topics based on number of likes?",
+      "Can you give me top 5 topics based on the created date?",
+      "Can you give me top 3 topics based on the number of replies?",
+      "Can you give me the top 5 topics based on last posted date?",
+    ],
     "Hackathon Users": [
       "Can you give me the top 3 users based on their trust level ?",
-      "What is the trust level of trondao ?", 
-      "Can you give me the list of all the moderators ?", 
-      "Is trondao a moderator ?"
+      "What is the trust level of trondao ?",
+      "Can you give me the list of all the moderators ?",
+      "Is trondao a moderator ?",
     ],
     "Site Feedback Users": ["question1", "question2", "question3", "question4"],
     "APE NFT Users": ["question1", "question2", "question3", "question4"],
@@ -58,10 +78,10 @@ const Homescreen = ({ route, onQuestionClick, selectedSubfield }) => {
     "Discussion Users": ["question1", "question2", "question3", "question4"],
     "Dev Talks Users": ["question1", "question2", "question3", "question4"],
     "Hackathon Posts": [
-      "Can you give me the top 3 posts based on created date ?", 
-      "Give me the top 3 posts based on number of replies.", 
-      "question 3", 
-      "question4"
+      "Can you give me the top 3 posts based on created date ?",
+      "Give me the top 3 posts based on number of replies.",
+      "question 3",
+      "question4",
     ],
     "Site Feedback Posts": ["question1", "question2", "question3", "question4"],
     "APE NFT Posts": ["question1", "question2", "question3", "question4"],
@@ -78,7 +98,6 @@ const Homescreen = ({ route, onQuestionClick, selectedSubfield }) => {
   ];
 
   const contractQuestions = {
-   
     "Contract Energy Statistics": [
       "question1 Contract Energy Statistics",
       "question2 Contract Energy Statistics",
@@ -97,7 +116,7 @@ const Homescreen = ({ route, onQuestionClick, selectedSubfield }) => {
       "question3 Hackathon Topics",
       "question4 Hackathon Topics",
     ],
-    "Tokens": [
+    Tokens: [
       "question1 Hackathon Topics",
       "question2 Hackathon Topics",
       "question3 Hackathon Topics",
@@ -106,13 +125,13 @@ const Homescreen = ({ route, onQuestionClick, selectedSubfield }) => {
   };
 
   const questions =
-  route === "dextrades"
-    ? dexTradesQuestions
-    : route === "forum"
-    ? forumQuestions[selectedSubfield] || []
-    : route === "contract"
-    ? contractQuestions[selectedSubfield] || []
-    : [];
+    route === "dextrades"
+      ? dexTradesQuestions
+      : route === "forum"
+      ? forumQuestions[selectedSubfield] || []
+      : route === "contract"
+      ? contractQuestions[selectedSubfield] || []
+      : [];
 
   return (
     <div className="flex flex-col w-[80%] mx-auto items-center justify-center p-12">
