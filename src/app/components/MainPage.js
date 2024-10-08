@@ -162,7 +162,6 @@ const MainPage = ({ route }) => {
 
       const data = await response.json();
       setSessionId(data.sessionId);
-      console.log("Chat session saved:", data.message);
     } catch (error) {
       console.error("Error saving chat session:", error);
     }
@@ -181,10 +180,7 @@ const MainPage = ({ route }) => {
         setMessage("");
         setDisabled(true);
 
-        console.log("Sending message to AI:", message);
-
         const aiResponse = await generateAIResponse(message);
-        console.log("Received AI response:", aiResponse);
 
         if (aiResponse) {
           const aiMessage = {
@@ -212,10 +208,11 @@ const MainPage = ({ route }) => {
       }
     }
   };
+  
   const generateAIResponse = async (userMessage) => {
     try {
       let dataType;
-
+  
       if (route === "forum" && selectedSubOption && selectedSubOption2) {
         dataType =
           dataTypeMapping[selectedSubOption]?.[selectedSubOption2] || "topics";
@@ -224,8 +221,7 @@ const MainPage = ({ route }) => {
       } else if (route === "dex-trades") {
         dataType = dataTypeMapping["dex-trades"]["DEX Trades"];
       }
-
-      const response = await fetch("http://34.231.214.248:5000/ask", {
+      const response = await fetch("/api/ask", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -236,9 +232,7 @@ const MainPage = ({ route }) => {
           data_type: dataType,
         }),
       });
-
-      console.log("API response status:", response.status);
-
+  
       if (!response.ok) {
         const errorText = await response.text();
         console.error("API error response:", errorText);
@@ -246,14 +240,8 @@ const MainPage = ({ route }) => {
           `Failed to generate AI response: ${response.status} ${response.statusText}`
         );
       }
-
+  
       const data = await response.json();
-      console.log("API response data:", data);
-
-      if (!data.answer) {
-        throw new Error("API response is missing the 'answer' field");
-      }
-
       return data.answer;
     } catch (error) {
       console.error("Error in generateAIResponse:", error);
