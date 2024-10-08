@@ -4,7 +4,6 @@ const Homescreen = ({ route, onQuestionClick, selectedSubfield }) => {
   const dexTradesQuestions = [
     "Show me the top 3 transactions based on trade amount",
     "What are the top 5 transactions with the highest buy amount?",
-    "Can you give me the top 3 trades bases on created date?",
     "Can you tell me the number of transactions happened on UniswapV2 exchange?",
   ];
 
