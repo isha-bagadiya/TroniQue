@@ -2,10 +2,10 @@ import React from "react";
 
 const Homescreen = ({ route, onQuestionClick, selectedSubfield }) => {
   const dexTradesQuestions = [
-    "What are the month wise total unique transactions?",
-    "What are percentage of total unique transactions for 10 smart contract?",
-    "Give the hourly total unique transactions of April based on block time.",
-    "What are the daily total trades?",
+    "Show me the top 3 transactions based on trade amount",
+    "What are the top 5 transactions with the highest buy amount?",
+    "Can you give me the top 3 trades bases on created date?",
+    "Can you tell me the number of transactions happened on UniswapV2 exchange?",
   ];
 
   const forumSubfields = [
@@ -34,60 +34,93 @@ const Homescreen = ({ route, onQuestionClick, selectedSubfield }) => {
       "Can you give me top 3 topics based on number of likes?",
       "Can you give me top 5 topics based on the created date?",
       "Can you give me top 3 topics based on the number of replies?",
-      "Can you give me the top 5 topics based on last posted date?",
+      // "Can you give me the top 5 topics based on last posted date?",
     ],
     "Site Feedback Topics": [
       "Can you give me top 3 topics based on number of likes?",
       "Can you give me top 5 topics based on the created date?",
-      "Can you give me top 3 topics based on the number of replies?",
+      // "Can you give me top 3 topics based on the number of replies?",
       "Can you give me the top 5 topics based on last posted date?",
     ],
     "APE NFT Topics": [
       "Can you give me top 3 topics based on number of likes?",
       "Can you give me top 5 topics based on the created date?",
       "Can you give me top 3 topics based on the number of replies?",
-      "Can you give me the top 5 topics based on last posted date?",
+      // "Can you give me the top 5 topics based on last posted date?",
     ],
     "Chitchat Topics": [
       "Can you give me top 3 topics based on number of likes?",
       "Can you give me top 5 topics based on the created date?",
       "Can you give me top 3 topics based on the number of replies?",
-      "Can you give me the top 5 topics based on last posted date?",
+      // "Can you give me the top 5 topics based on last posted date?",
     ],
     "Discussion Topics": [
       "Can you give me top 3 topics based on number of likes?",
       "Can you give me top 5 topics based on the created date?",
       "Can you give me top 3 topics based on the number of replies?",
-      "Can you give me the top 5 topics based on last posted date?",
+      // "Can you give me the top 5 topics based on last posted date?",
     ],
     "Dev Talks Topics": [
       "Can you give me top 3 topics based on number of likes?",
       "Can you give me top 5 topics based on the created date?",
-      "Can you give me top 3 topics based on the number of replies?",
+      // "Can you give me top 3 topics based on the number of replies?",
       "Can you give me the top 5 topics based on last posted date?",
     ],
     "Hackathon Users": [
       "Can you give me the top 3 users based on their trust level ?",
       "What is the trust level of trondao ?",
       "Can you give me the list of all the moderators ?",
-      "Is trondao a moderator ?",
+      // "Is trondao a moderator ?",
     ],
-    "Site Feedback Users": ["question1", "question2", "question3", "question4"],
-    "APE NFT Users": ["question1", "question2", "question3", "question4"],
-    "Chitchat Users": ["question1", "question2", "question3", "question4"],
-    "Discussion Users": ["question1", "question2", "question3", "question4"],
-    "Dev Talks Users": ["question1", "question2", "question3", "question4"],
+    "Site Feedback Users": [
+      "Can you give me the top 3 users based on their trust level ?",
+      "What is the trust level of trondao ?",
+      "Can you give me the list of all the moderators ?",
+    ],
+    "APE NFT Users": [
+      "Can you give me the top 3 users based on their trust level ?",
+      "What is the trust level of trondao ?",
+      "Can you give me the list of all the moderators ?",
+    ],
+    "Chitchat Users": [
+      "Can you give me the top 3 users based on their trust level ?",
+      "What is the trust level of trondao ?",
+      "Can you give me the list of all the moderators ?",
+    ],
+    "Discussion Users": [
+      "Can you give me the top 3 users based on their trust level ?",
+      "What is the trust level of trondao ?",
+      "Can you give me the list of all the moderators ?",
+    ],
+    "Dev Talks Users": [
+      "Can you give me the top 3 users based on their trust level ?",
+      "What is the trust level of trondao ?",
+      "Can you give me the list of all the moderators ?",
+    ],
     "Hackathon Posts": [
       "Can you give me the top 3 posts based on created date ?",
       "Give me the top 3 posts based on number of replies.",
-      "question 3",
-      "question4",
     ],
-    "Site Feedback Posts": ["question1", "question2", "question3", "question4"],
-    "APE NFT Posts": ["question1", "question2", "question3", "question4"],
-    "Chitchat Posts": ["question1", "question2", "question3", "question4"],
-    "Discussion Posts": ["question1", "question2", "question3", "question4"],
-    "Dev Talks Posts": ["question1", "question2", "question3", "question4"],
+    "Site Feedback Posts": [
+      "Can you give me the top 3 posts based on created date ?",
+      "Give me the top 3 posts based on number of replies.",
+    ],
+    "APE NFT Posts": [
+      "Can you give me the top 3 posts based on created date ?",
+      "Give me the top 3 posts based on number of replies.",
+    ],
+    "Chitchat Posts": [
+      "Can you give me the top 3 posts based on created date ?",
+      "Give me the top 3 posts based on number of replies.",
+    ],
+    "Discussion Posts": [
+      "Can you give me the top 3 posts based on created date ?",
+      "Give me the top 3 posts based on number of replies.",
+    ],
+    "Dev Talks Posts": [
+      "Can you give me the top 3 posts based on created date ?",
+      "Give me the top 3 posts based on number of replies.",
+    ],
   };
 
   const contractSubfields = [
@@ -99,28 +132,24 @@ const Homescreen = ({ route, onQuestionClick, selectedSubfield }) => {
 
   const contractQuestions = {
     "Contract Energy Statistics": [
-      "question1 Contract Energy Statistics",
-      "question2 Contract Energy Statistics",
-      "question3 Contract Energy Statistics",
-      "question4 Contract Energy Statistics",
+      "Can you give me the top 5 contracts based on energy supplied by contract?",
+      "What are the top 5 unique contracts based on trx?",
+      "What is the total energy of contract TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
     ],
     "Contract Call Statistics": [
-      "question1 Contract Call Statistics",
-      "question2 Contract Call Statistics",
-      "question3 Contract Call Statistics",
-      "question4 Contract Call Statistics",
+      "What is the trx count for the contract named TetherToken?",
+      "Show me the first 3 contracts by highest number of trx",
+      "Can you give me a brief description of contract LaunchPadProxy",
     ],
     "Contract Data Statistics": [
-      "question1 Hackathon Topics",
-      "question2 Hackathon Topics",
-      "question3 Hackathon Topics",
-      "question4 Hackathon Topics",
+      "What are the top 10 contracts based on balance with tokens?",
+      "Is the creator of contract TVj7RNVHy6thbM7BWdSe9G6gXwKhjhdNZS a contract itself?",
+      "What is the trx count of contract TVj7RNVHy6thbM7BWdSe9G6gXwKhjhdNZS?",
     ],
     Tokens: [
-      "question1 Hackathon Topics",
-      "question2 Hackathon Topics",
-      "question3 Hackathon Topics",
-      "question4 Hackathon Topics",
+      "Give me the top 5 tokens by balance.",
+      "Can you give me the the first 3 tokens based on created date?",
+      "Who is the owner of the APENFT and what is the type of the token?",
     ],
   };
 
@@ -143,16 +172,16 @@ const Homescreen = ({ route, onQuestionClick, selectedSubfield }) => {
           How can I help you today?
         </p>
       </div>
-      <div className="flex flex-row justify-start gap-4 items-center w-full mt-12 cursor-pointer">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full mt-12">
         {questions.map((question, index) => (
           <div
             key={index}
-            className="overflow-hidden rounded-lg p-[1px] flex flex-col justify-start items-center w-[220px] h-[160px] bg-gradient-to-l hover:bg-gradient-to-tl from-[#FCD8D8] to-[#FB5C78]"
+            className="overflow-hidden rounded-lg p-[1px] flex flex-col justify-start items-center w-full h-40 bg-gradient-to-l hover:bg-gradient-to-tl from-[#FCD8D8] to-[#FB5C78] cursor-pointer"
             onClick={() => onQuestionClick(question)}
           >
-            <div className="bg-[#121212] rounded-lg w-full h-full">
-              <p className="bg-[#45353545] hover:bg-[#4535359d] rounded-lg w-full h-full py-3 px-6">
-                {question}
+            <div className="bg-[#121212] rounded-lg w-full h-full flex items-center justify-center">
+              <p className="bg-[#45353545] hover:bg-[#4535359d] rounded-lg w-full h-full py-3 px-6 flex items-center justify-center text-center overflow-hidden">
+                <span className="line-clamp-3">{question}</span>
               </p>
             </div>
           </div>

@@ -26,9 +26,9 @@ const MainPage = ({ route }) => {
 
   const dataTypeMapping = {
     Hackathon: {
-      Topics: "hackathon_topics",
-      Users: "hackathon_users",
-      Posts: "hackathon_posts",
+      Topics: "topics",
+      Users: "users",
+      Posts: "posts",
     },
     "Site Feedback": {
       Topics: "sitefeedback_topics",
@@ -55,6 +55,15 @@ const MainPage = ({ route }) => {
       Users: "devtalks_users",
       Posts: "devtalks_posts",
     },
+    "dex-trades": {
+      "DEX Trades": "dex_trades",
+    },
+    contract: {
+      "Contract Energy Statistics": "contract_energy_statistics",
+      "Contract Call Statistics": "contract_call_statistics",
+      "Contract Data Statistics": "contract_data_statistics",
+      "Tokens": "tokens",
+    },  
   };
 
   useEffect(() => {
@@ -211,8 +220,9 @@ const MainPage = ({ route }) => {
         dataType =
           dataTypeMapping[selectedSubOption]?.[selectedSubOption2] || "topics";
       } else if (route === "contract" && selectedSubOption) {
-        // You can add specific logic for the contract route if needed
-        dataType = "topics"; // or any other default for contract route
+        dataType = dataTypeMapping.contract[selectedSubOption] || "topics";
+      } else if (route === "dex-trades") {
+        dataType = dataTypeMapping["dex-trades"]["DEX Trades"];
       }
 
       const response = await fetch("http://34.231.214.248:5000/ask", {

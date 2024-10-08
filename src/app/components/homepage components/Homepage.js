@@ -3,9 +3,9 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import img1 from "../../../../public/Img 1.svg";
-import img2 from "../../../../public/Illustration2.svg";
-import img3 from "../../../../public/Illustration3.svg";
-import img4 from "../../../../public/Illustration4.svg";
+import img2 from "../../../../public/illustration2.webp";
+import img3 from "../../../../public/illustration3.webp";
+import img4 from "../../../../public/illustration4.webp";
 import Link from "next/link";
 import { useWallet } from "@tronweb3/tronwallet-adapter-react-hooks";
 import { WalletActionButton } from "@tronweb3/tronwallet-adapter-react-ui";
@@ -131,7 +131,7 @@ const Homepage = () => {
               community opinions, and key discussions.
             </p>
           </div>
-          <div className="w-[33%] h-max">
+          <div className="w-[33%] h-max rounded-2xl overflow-hidden">
             <Image
               src={img2}
               alt="img2"
@@ -155,7 +155,7 @@ const Homepage = () => {
               decisions.
             </p>
           </div>
-          <div className="w-[33%] h-max">
+          <div className="w-[33%] h-max rounded-2xl overflow-hidden">
             <Image
               src={img3}
               alt="img3"
@@ -168,21 +168,24 @@ const Homepage = () => {
         <div className="flex items-center justify-between p-10 py-14 bg-gradient-to-b from-[#242424f0] to-[#1d1a1afb] rounded-2xl w-full my-10">
           <div className="w-[52%] flex flex-col">
             <h2 className="text-4xl font-bold text-red-400">
-              Documentation Gateway
+              Smart Contracts Statistics
             </h2>
             <h4 className="text-xl my-5 leading-tight">
-              Access All Essential Information in One Place
+              Explore and Track TRON Smart Contracts with Ease
             </h4>
             <p className="text-base text-justify">
-              Navigate the TRON ecosystems complexities effortlessly with
-              TroniQue. Just type in a query—be it technical specifications,
-              developer guides, or operational details—and our AI-driven system
-              retrieves the information instantly. Its like having a
-              knowledgeable guide right at your fingertips, making sure you get
-              the precise data you need without the usual hassle.
+              At TroniQue, we make accessing comprehensive smart contract data
+              on the TRON blockchain simple and efficient. Our platform provides
+              users with detailed insights into key aspects of smart contracts,
+              including their creation, status, interactions, and execution
+              history. Whether you&apos;re monitoring specific contracts, analyzing
+              trends, or verifying contract activity, TroniQue streamlines the
+              process, offering clear and accessible information. With just a
+              few clicks, users can explore the smart contracts that drive the
+              TRON ecosystem.
             </p>
           </div>
-          <div className="w-[33%] h-max">
+          <div className="w-[33%] h-max rounded-2xl overflow-hidden">
             <Image
               src={img4}
               alt="img4"

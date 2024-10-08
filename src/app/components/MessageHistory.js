@@ -10,6 +10,7 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 const MessageHistory = ({ messages }) => {
   const messagesEndRef = useRef(null);
   const [viewMode, setViewMode] = useState({});
+  const [chartData, setChartData] = useState({});
   const [chartLoading, setChartLoading] = useState({});
 
   const scrollToBottom = () => {
@@ -20,17 +21,33 @@ const MessageHistory = ({ messages }) => {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    const newChartData = {};
+    messages.forEach((message, index) => {
+      if (message.type === "ai") {
+        const parsedData = parseData(message.content);
+        if (parsedData) {
+          newChartData[index] = {
+            options: getChartOptions(parsedData),
+            series: getChartSeries(parsedData),
+          };
+        }
+      }
+    });
+    setChartData(newChartData);
+  }, [messages]);
+
   const toggleViewMode = (index) => {
     setViewMode((prev) => ({
       ...prev,
       [index]: prev[index] === "analytics" ? "content" : "analytics",
     }));
-    if (!chartLoading[index]) {
+    if (viewMode[index] !== "analytics") {
       setChartLoading((prev) => ({ ...prev, [index]: true }));
-      // Simulate loading time
+      // Use a shorter timeout to simulate a quick loading process
       setTimeout(() => {
         setChartLoading((prev) => ({ ...prev, [index]: false }));
-      }, 1000);
+      }, 500);
     }
   };
 
@@ -190,6 +207,8 @@ const MessageHistory = ({ messages }) => {
     <div className="w-full h-full p-4 space-y-4 font-sans">
       {messages.map((message, index) => {
         const parsedData = parseData(message.content);
+        const hasChartData = chartData[index];
+
         return (
           <div
             key={index}
@@ -221,7 +240,7 @@ const MessageHistory = ({ messages }) => {
                 <ReactMarkdown className="text-sm break-words">
                   {message.content}
                 </ReactMarkdown>
-                {message.type === "ai" && parsedData && (
+                {message.type === "ai" && hasChartData && (
                   <>
                     <div className="mt-[20px] ml-auto">
                       <button
@@ -234,13 +253,17 @@ const MessageHistory = ({ messages }) => {
                       </button>
                     </div>
                     {viewMode[index] === "analytics" && (
-                      <div className="mt-2 mx-auto border rounded-lg p-4  bg-white w-full max-w-[500px] overflow-x-auto">
-                        <Chart
-                          options={getChartOptions(parsedData)}
-                          series={getChartSeries(parsedData)}
-                          type="bar"
-                          height={300}
-                        />
+                      <div className="mt-2 mx-auto border rounded-lg p-4 bg-white w-full max-w-[500px] overflow-x-auto">
+                        {chartLoading[index] ? (
+                          <ChartLoader />
+                        ) : (
+                          <Chart
+                            options={chartData[index].options}
+                            series={chartData[index].series}
+                            type="bar"
+                            height={300}
+                          />
+                        )}
                       </div>
                     )}
                   </>
