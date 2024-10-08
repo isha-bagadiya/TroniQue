@@ -277,14 +277,14 @@ const MainPage = ({ route }) => {
         ) : (
           <>
             <MessageHistory messages={messages} />
-            {isAIGenerating && (
+            {/* {isAIGenerating && (
               <div
                 className={`max-w-[70%] p-3 rounded-lg "bg-gray-200 rounded-br-none opacity-5`}
               >
                 <div className="h-2 bg-gray-300 rounded animate-pulse w-[310px]"></div>
                 <div className="h-2 bg-gray-300 rounded animate-pulse mt-2 w-[310px]"></div>
               </div>
-            )}
+            )} */}
 
             <div ref={messagesEndRef} />
           </>
