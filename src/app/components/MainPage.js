@@ -22,38 +22,39 @@ const MainPage = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isMessageSending, setIsMessageSending] = useState(false);
   const messagesEndRef = useRef(null);
+  const [isAIGenerating, setIsAIGenerating] = useState(false); // New state
 
   const dataTypeMapping = {
-    "Hackathon": {
+    Hackathon: {
       Topics: "hackathon_topics",
       Users: "hackathon_users",
-      Posts: "hackathon_posts"
+      Posts: "hackathon_posts",
     },
     "Site Feedback": {
       Topics: "sitefeedback_topics",
       Users: "sitefeedback_users",
-      Posts: "sitefeedback_posts"
+      Posts: "sitefeedback_posts",
     },
     "APE NFT": {
       Topics: "apenft_topics",
       Users: "apenft_users",
-      Posts: "apenft_posts"
+      Posts: "apenft_posts",
     },
-    "Chitchat": {
+    Chitchat: {
       Topics: "chitchat_topics",
       Users: "chitchat_users",
-      Posts: "chitchat_posts"
+      Posts: "chitchat_posts",
     },
-    "Discussion": {
+    Discussion: {
       Topics: "discussion_topics",
       Users: "discussion_users",
-      Posts: "discussion_posts"
+      Posts: "discussion_posts",
     },
     "Dev Talks": {
       Topics: "devtalks_topics",
       Users: "devtalks_users",
-      Posts: "devtalks_posts"
-    }
+      Posts: "devtalks_posts",
+    },
   };
 
   useEffect(() => {
@@ -138,7 +139,10 @@ const MainPage = ({ route }) => {
           route,
           messages: updatedMessages,
           sessionId,
-          subOption: route === "forum" || route === "contract" ? selectedSubOption : undefined,
+          subOption:
+            route === "forum" || route === "contract"
+              ? selectedSubOption
+              : undefined,
           subOption2: route === "forum" ? selectedSubOption2 : undefined,
         }),
       });
@@ -160,6 +164,8 @@ const MainPage = ({ route }) => {
       try {
         await deductCredit();
         setIsMessageSending(true);
+        setIsAIGenerating(true); // Set to true when starting AI generation
+
         const newUserMessage = { type: "user", content: message };
         const updatedMessages = [...messages, newUserMessage];
         setMessages(updatedMessages);
@@ -193,21 +199,23 @@ const MainPage = ({ route }) => {
         setMessages((prevMessages) => [...prevMessages, errorMessage]);
       } finally {
         setIsMessageSending(false);
+        setIsAIGenerating(false); // Set to false when AI generation is complete
       }
     }
   };
   const generateAIResponse = async (userMessage) => {
     try {
-      let dataType; 
-      
+      let dataType;
+
       if (route === "forum" && selectedSubOption && selectedSubOption2) {
-        dataType = dataTypeMapping[selectedSubOption]?.[selectedSubOption2] || "topics";
+        dataType =
+          dataTypeMapping[selectedSubOption]?.[selectedSubOption2] || "topics";
       } else if (route === "contract" && selectedSubOption) {
         // You can add specific logic for the contract route if needed
         dataType = "topics"; // or any other default for contract route
       }
 
-      const response = await fetch("https://tronique-api.onrender.com/ask", {
+      const response = await fetch("http://34.231.214.248:5000/ask", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -258,19 +266,28 @@ const MainPage = ({ route }) => {
           <MessageHistorySkeleton />
         ) : messages?.length === 0 ? (
           <Homescreen
-          route={route}
-          onQuestionClick={handleQuestionClick}
-          selectedSubfield={
-            route === "forum"
-              ? `${selectedSubOption} ${selectedSubOption2}`.trim()
-              : route === "contract"
-              ? selectedSubOption
-              : undefined
-          }
-        />
+            route={route}
+            onQuestionClick={handleQuestionClick}
+            selectedSubfield={
+              route === "forum"
+                ? `${selectedSubOption} ${selectedSubOption2}`.trim()
+                : route === "contract"
+                ? selectedSubOption
+                : undefined
+            }
+          />
         ) : (
           <>
             <MessageHistory messages={messages} />
+            {isAIGenerating && (
+              <div
+                className={`max-w-[70%] p-3 rounded-lg "bg-gray-200 rounded-br-none opacity-5`}
+              >
+                <div className="h-2 bg-gray-300 rounded animate-pulse w-[310px]"></div>
+                <div className="h-2 bg-gray-300 rounded animate-pulse mt-2 w-[310px]"></div>
+              </div>
+            )}
+
             <div ref={messagesEndRef} />
           </>
         )}
