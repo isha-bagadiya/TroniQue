@@ -221,7 +221,7 @@ const MainPage = ({ route }) => {
       } else if (route === "dextrades") {
         dataType = dataTypeMapping["dex-trades"]["DEX Trades"];
       }
-      const response = await fetch("http://127.0.0.1:5000/ask", {
+      const response = await fetch("/api/ask", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
