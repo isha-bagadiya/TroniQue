@@ -6,7 +6,7 @@ export async function POST(request) {
 
     console.log('Received POST request with data:', { question, data_type });
 
-    const response = await fetch("http://3.227.25.142:5000/ask", {
+    const response = await fetch("http://157.173.218.229:5000/ask", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
